@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Examia</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#14213d;--acc:#ffc933;--paper:#f6f8fb;--line:#dde3ee;--muted:#5b6785;--green:#1e8e5a;--red:#c8372d;--blue:#2447c5}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.55 "Source Sans 3",system-ui,sans-serif}
+h1,h2,h3{font-family:"Bricolage Grotesque",system-ui,sans-serif;line-height:1.1;margin:0}
+button,input,select,textarea{font:inherit}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.wrap{width:min(1080px,calc(100% - 32px));margin:auto}
+header{background:var(--ink);color:#fff;position:sticky;top:0;z-index:20}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:64px;flex-wrap:wrap}
+.logo{font:800 24px "Bricolage Grotesque",sans-serif;color:#fff;text-decoration:none;display:flex;align-items:center;gap:10px}
+.logo img{height:38px;width:auto;border-radius:6px}
+nav{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+nav a{color:#cfd6ea;text-decoration:none;padding:8px 10px;border-radius:8px;font-weight:600;font-size:15px}
+.btn{border:0;border-radius:10px;padding:11px 18px;font-weight:700;cursor:pointer;background:var(--acc);color:#14213d}
+.btn.dark{background:var(--ink);color:#fff}.btn.ghost{background:transparent;border:2px solid var(--line);color:inherit}.btn.red{background:var(--red);color:#fff}
+.btn.sm{padding:7px 12px;font-size:14px}.btn[disabled]{opacity:.5;cursor:not-allowed}
+.hero{padding:56px 0;background:var(--ink);color:#fff}
+.hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
+.hero h1{font-size:clamp(34px,5vw,54px);letter-spacing:-1.5px}.hero p{color:#cfd6ea;font-size:19px;max-width:520px}
+.hero img{width:100%;border-radius:12px;max-height:340px;object-fit:cover}
+section{padding:48px 0}section h2{font-size:clamp(26px,3.5vw,36px);margin-bottom:8px}
+.sub,.meta{color:var(--muted)}.sub{margin:0 0 22px;max-width:620px}
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
+.chip{border:2px solid var(--line);background:#fff;border-radius:999px;padding:7px 16px;font-weight:700;cursor:pointer;color:var(--ink)}
+.chip[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:#fff}
+input,select,textarea{width:100%;padding:10px 12px;border:2px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+input[type=checkbox]{width:auto}input[type=color]{padding:2px;height:42px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
+.card,.plan,.quiz,.row2{background:#fff;border:2px solid var(--line);border-radius:12px;padding:18px}
+.card,.plan{display:flex;flex-direction:column;gap:8px}.card .btn,.plan .btn{margin-top:auto}
+.badge{align-self:flex-start;font-weight:700;font-size:13px;padding:3px 10px;border-radius:6px;background:#e3f4ea;color:var(--green)}.badge.pro{background:#fff1c2;color:#7a5a00}
+.empty{padding:24px;border:2px dashed var(--line);border-radius:12px;color:var(--muted)}
+.q{font:700 22px "Bricolage Grotesque",sans-serif;margin:8px 0 16px}
+.opt{display:block;width:100%;text-align:left;margin:8px 0;padding:12px 14px;border-radius:10px;border:2px solid var(--line);background:#fff;cursor:pointer;font-weight:600}
+.opt.good{background:#e3f4ea;border-color:var(--green)}.opt.bad{background:#fde6e3;border-color:var(--red)}
+.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.plan.best{border-color:var(--ink);box-shadow:6px 6px 0 var(--acc)}
+.price{font:800 32px "Bricolage Grotesque",sans-serif}.plan ul{margin:0;padding-left:20px;color:var(--muted)}
+dialog{border:0;border-radius:16px;padding:26px;width:min(520px,calc(100% - 24px));max-height:88vh;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+dialog::backdrop{background:rgba(20,33,61,.6)}dialog h3{font-size:24px;margin-bottom:10px}
+label{display:block;font-weight:700;margin:12px 0 4px;font-size:15px}
+.row{display:flex;gap:10px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}
+.corr{background:#f1f5fb;border-left:4px solid var(--green);padding:12px 14px;border-radius:6px;white-space:pre-line;margin:10px 0}
+.err{color:var(--red);font-weight:600;min-height:22px;margin:8px 0 0}
+.tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.fm{background:#fff;border:2px solid var(--line);border-radius:12px;padding:18px;margin-bottom:20px;display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+.fm h3,.fm .full,.fm .row{grid-column:1/-1}
+.row2{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 20px;border-radius:10px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .25s;z-index:50;max-width:92vw}
+#toast.on{opacity:1}
+footer{background:var(--ink);color:#aab4d0;padding:26px 0;font-size:15px}footer a{color:var(--acc)}
+@media(max-width:760px){.hero .wrap,.fm{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header><div class="wrap nav"><a class="logo" href="#" id="brand"></a>
+<nav><a href="#sujets" class="pub">Sujets</a><a href="#quiz" class="pub">Quiz</a><a href="#tarifs" class="pub">Tarifs</a>
+<button class="btn sm dark" id="admBtn" hidden style="border:2px solid var(--acc)">Espace admin</button>
+<button class="btn sm" id="authBtn">Connexion</button></nav></div></header>
+
+<main id="site">
+<div class="hero"><div class="wrap"><div><h1 id="hT"></h1><p id="hP"></p><p><a class="btn" href="#sujets">Voir les sujets</a></p></div><div id="hImg"></div></div></div>
+<section id="sujets"><div class="wrap"><h2>Sujets corrigés</h2><p class="sub">Les sujets gratuits sont ouverts à tous. Les sujets premium demandent un abonnement actif.</p>
+<div class="tools" id="chips"></div><div class="grid" id="list"></div></div></section>
+<section id="quiz" style="background:#eaeff7"><div class="wrap"><h2>Quiz d’entraînement</h2><p class="sub">Choisis un examen et réponds à 4 questions.</p>
+<div class="tools" id="qc"></div><div class="quiz" id="qb">Choisis un examen pour commencer.</div></div></section>
+<section id="tarifs"><div class="wrap"><h2>Tarifs</h2><p class="sub" id="pstat">Paiement par Mobile Money. Pas de carte bancaire nécessaire.</p><div class="plans" id="plans"></div></div></section>
+</main>
+
+<main id="adm" hidden><div class="wrap" style="padding:30px 0">
+<h2>Espace admin</h2><div class="tabs" id="tabs"></div><div id="abox"></div></div></main>
+
+<footer><div class="wrap" id="foot"></div></footer>
+<dialog id="dlg"></dialog><div id="toast" role="status" aria-live="polite"></div>
+
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {getAuth,onAuthStateChanged,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,sendEmailVerification} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {getFirestore,doc,getDoc,setDoc,deleteDoc,addDoc,collection,getDocs,query,where,serverTimestamp,writeBatch} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const app=initializeApp({apiKey:"AIzaSyCyjp0R0ARrfqusvxXNyiyXm1y83DWXKK8",authDomain:"f2kexamia.firebaseapp.com",projectId:"f2kexamia",storageBucket:"f2kexamia.firebasestorage.app",messagingSenderId:"799236673979",appId:"1:799236673979:web:aa08ac5767d32d048b749e"});
+const auth=getAuth(app),db=getFirestore(app);
+
+/* ---------- Outils ---------- */
+const $=s=>document.querySelector(s),esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fcfa=n=>Number(n).toLocaleString("fr-FR")+" FCFA";
+const toast=m=>{const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove("on"),3500)};
+const ERR={"auth/invalid-credential":"E-mail ou mot de passe incorrect.","auth/email-already-in-use":"Cet e-mail a déjà un compte.","auth/weak-password":"Mot de passe trop court (6 caractères minimum).","auth/invalid-email":"Adresse e-mail invalide.","auth/too-many-requests":"Trop d’essais. Réessaie plus tard.","permission-denied":"Action refusée par les règles de sécurité."};
+const em=e=>ERR[e.code]||ERR[(e.code||"").replace("firestore/","")]||e.message||"Erreur inconnue.";
+const EX={bepc:"BEPC",bac:"BAC",concours:"Concours"};
+const DEF={name:"Examia",tagline:"Prépare. Révise. Réussis.",heroTitle:"Prépare ton examen avec des sujets corrigés.",heroText:"BEPC, BAC et concours : annales, corrections détaillées et quiz pour t’entraîner. Paiement par Mobile Money.",color:"#14213d",accent:"#ffc933",whatsapp:"",linkMonth:"",linkPack:"",priceMonth:1500,pricePack:5000,footer:"",logo:"",hero:""};
+let S={...DEF},U=null,P=null,ADM=false,AC=new Set(),SUJ=[],filter="all",term="",ED=null,payCtx=null,qz=null,tab="site";
+const premium=()=>!!P&&P.premiumUntil>Date.now(),ADMIN="franckadre7@gmail.com",can=x=>x.free||premium()||AC.has(x.id);
+
+/* ---------- Médias (gratuit : tout est stocké dans Firestore) ---------- */
+const readFile=f=>new Promise((ok,ko)=>{const r=new FileReader();r.onload=()=>ok(r.result);r.onerror=ko;r.readAsDataURL(f)});
+async function shrink(f,max,q){const i=new Image();i.src=await readFile(f);await i.decode();const k=Math.min(1,max/Math.max(i.width,i.height)),c=document.createElement("canvas");c.width=i.width*k;c.height=i.height*k;c.getContext("2d").drawImage(i,0,0,c.width,c.height);return c.toDataURL("image/webp",q||.8)}
+async function upload(f,pub,max,sid){
+ let url=f.type.startsWith("image/")?await shrink(f,max||1100):null;
+ if(!url){if(f.size>5*1048576)throw new Error("Fichier trop lourd (5 Mo maximum).");url=await readFile(f)}
+ const id=doc(collection(db,"media")).id,N=700000,n=Math.ceil(url.length/N),b=writeBatch(db);
+ for(let i=0;i<n;i++)b.set(doc(db,"mediaChunks",id+"_"+i),{pub,sid,data:url.slice(i*N,(i+1)*N)});
+ b.set(doc(db,"media",id),{name:f.name,n,pub,createdAt:serverTimestamp()});await b.commit();return id}
+const cache={};
+async function mediaUrl(id){if(cache[id])return cache[id];const m=await getDoc(doc(db,"media",id));if(!m.exists())return"";
+ const p=await Promise.all(Array.from({length:m.data().n},(_,i)=>getDoc(doc(db,"mediaChunks",id+"_"+i)))),u=p.map(x=>x.data().data).join("");
+ return cache[id]=u.startsWith("data:image")?u:URL.createObjectURL(await(await fetch(u)).blob())}
+async function mediaOp(id,pub){if(!id)return;const m=await getDoc(doc(db,"media",id));if(!m.exists())return;const b=writeBatch(db);
+ for(let i=0;i<m.data().n;i++){const r=doc(db,"mediaChunks",id+"_"+i);pub===undefined?b.delete(r):b.update(r,{pub})}
+ pub===undefined?b.delete(m.ref):b.update(m.ref,{pub});await b.commit()}
+
+/* ---------- Authentification ---------- */
+async function refresh(){P=null;ADM=false;AC=new Set();if(U){try{const p=await getDoc(doc(db,"users",U.uid));P=p.exists()?p.data():null;ADM=U.email===ADMIN&&U.emailVerified;
+  if(U.email===ADMIN&&!U.emailVerified&&!refresh.m){refresh.m=1;sendEmailVerification(U).catch(()=>{});toast("Vérifie ta boîte e-mail pour activer l’espace admin, puis reconnecte-toi.")}
+  AC=new Set((await getDocs(query(collection(db,"access"),where("uid","==",U.uid)))).docs.map(d=>d.data().sid))}catch{}}render()}
+onAuthStateChanged(auth,u=>{U=u;refresh()});
+$("#authBtn").onclick=()=>U?signOut(auth).then(()=>{showAdmin(false);toast("Tu es déconnecté.")}):openAuth();
+function openAuth(signup){
+ const d=$("#dlg");d.innerHTML=`<h3>${signup?"Créer un compte":"Connexion"}</h3><form id="f" novalidate>
+ ${signup?'<label for="n">Nom complet</label><input id="n" autocomplete="name">':""}
+ <label for="e">E-mail</label><input id="e" type="email" autocomplete="email"><label for="p">Mot de passe</label><input id="p" type="password" autocomplete="${signup?"new-password":"current-password"}">
+ <p class="err" id="err"></p><div class="row"><button type="button" class="btn ghost" id="sw">${signup?"J’ai déjà un compte":"Créer un compte"}</button><button class="btn">${signup?"Créer mon compte":"Me connecter"}</button></div></form>`;
+ d.showModal();$("#sw").onclick=()=>openAuth(!signup);
+ $("#f").onsubmit=async ev=>{ev.preventDefault();const e=$("#e").value.trim(),p=$("#p").value,n=signup?$("#n").value.trim():"";
+  if(signup&&!n)return $("#err").textContent="Indique ton nom.";
+  try{if(signup){const c=await createUserWithEmailAndPassword(auth,e,p);U=c.user;await setDoc(doc(db,"users",U.uid),{name:n,email:e,premiumUntil:0,best:{}});await refresh()}
+   else await signInWithEmailAndPassword(auth,e,p);d.close();toast("Bienvenue !")}catch(er){$("#err").textContent=em(er)}}}
+
+/* ---------- Réglages du site ---------- */
+async function loadSettings(){try{const s=await getDoc(doc(db,"settings","site"));if(s.exists())S={...DEF,...s.data()}}catch{toast("Impossible de lire les réglages. Vérifie les règles Firestore.")}render()}
+function applyTheme(){document.title=S.name+" — "+S.tagline;document.documentElement.style.setProperty("--ink",S.color);document.documentElement.style.setProperty("--acc",S.accent)}
+async function loadSujets(){try{SUJ=(await getDocs(collection(db,"sujets"))).docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.an||0)-(a.an||0)||a.title.localeCompare(b.title))}catch{SUJ=[]}}
+
+/* ---------- Affichage public ---------- */
+function render(){
+ applyTheme();$("#brand").innerHTML=(S.logo?`<img src="${S.logo}" alt="">`:"")+esc(S.name);
+ $("#hT").textContent=S.heroTitle;$("#hP").textContent=S.heroText;$("#hImg").innerHTML=S.hero?`<img src="${S.hero}" alt="">`:"";
+ $("#authBtn").textContent=U?(P?.name||"Compte").split(" ")[0]+" · Déconnexion":"Connexion";$("#admBtn").hidden=!ADM;
+ $("#foot").innerHTML=esc(S.footer||S.name+" — "+S.tagline)+(S.whatsapp?` · <a href="https://wa.me/${esc(S.whatsapp)}">WhatsApp</a>`:"");
+ chips();list();plans();$("#pstat").textContent=premium()?"Ton accès Premium est actif jusqu’au "+new Date(P.premiumUntil).toLocaleDateString("fr-FR")+".":"Paiement par Mobile Money. Pas de carte bancaire nécessaire."}
+function chips(){const b=$("#chips");if(b.dataset.k===filter&&b.children.length)return[...b.querySelectorAll("button")].forEach(x=>x.setAttribute("aria-pressed",x.dataset.k===filter));b.innerHTML="";
+ [["all","Tous"],...Object.entries(EX)].forEach(([k,l])=>{const c=document.createElement("button");c.className="chip";c.textContent=l;c.dataset.k=k;c.setAttribute("aria-pressed",k===filter);c.onclick=()=>{filter=k;chips();list()};b.appendChild(c)});
+ const s=document.createElement("input");s.type="search";s.placeholder="Chercher une matière…";s.style.maxWidth="260px";s.oninput=()=>{term=s.value;list()};b.appendChild(s)}
+function list(){const L=SUJ.filter(x=>(filter==="all"||x.exam===filter)&&(x.mat+" "+x.title).toLowerCase().includes(term.toLowerCase()));
+ $("#list").innerHTML=L.length?L.map(x=>{const o=can(x);return`<article class="card"><span class="badge ${x.free?"":"pro"}">${x.free?"Gratuit":"Premium"}</span><h3>${esc(x.title)}</h3><div class="meta">${EX[x.exam]||""} · ${esc(x.mat)} · ${x.an||""}</div><button class="btn ${o?"":"dark"}" data-id="${x.id}">${o?"Voir le corrigé":"Débloquer avec Premium"}</button></article>`}).join(""):'<div class="empty">Aucun sujet pour le moment. Reviens bientôt.</div>';
+ $("#list").querySelectorAll("button").forEach(b=>b.onclick=()=>openSujet(b.dataset.id))}
+async function openSujet(id){const x=SUJ.find(s=>s.id===id);
+ if(!can(x)){if(!U){toast("Crée un compte pour débloquer ce sujet.");return openAuth(true)}return buyDlg({kind:"sujet",id:x.id,label:x.title,price:x.price,link:x.payLink,days:0},true)}
+ const d=$("#dlg");d.innerHTML=`<h3>${esc(x.title)}</h3><p class="meta">${EX[x.exam]||""} · ${esc(x.mat)} · ${x.an||""}</p><div id="sc">Chargement…</div><div class="row"><button class="btn" id="cl">Fermer</button></div>`;d.showModal();$("#cl").onclick=()=>d.close();
+ try{const c=(await getDoc(doc(db,"sujetsContent",id))).data()||{};let h="";
+  if(c.imageId)h+=`<img src="${await mediaUrl(c.imageId)}" alt="" style="max-width:100%;border-radius:8px">`;
+  if(c.corrige)h+=`<div class="corr">${esc(c.corrige)}</div>`;
+  const y=(c.video||"").match(/(?:v=|youtu\.be\/|embed\/)([\w-]{11})/);
+  if(y)h+=`<iframe src="https://www.youtube-nocookie.com/embed/${y[1]}" allowfullscreen style="width:100%;aspect-ratio:16/9;border:0;border-radius:8px"></iframe>`;
+  if(c.pdfId)h+=`<p><button class="btn dark" id="pdf">Télécharger le PDF</button></p>`;
+  $("#sc").innerHTML=h||"Contenu bientôt disponible.";
+  if(c.pdfId)$("#pdf").onclick=async()=>{const a=document.createElement("a");a.href=await mediaUrl(c.pdfId);a.download=x.title+".pdf";a.click()}
+ }catch{$("#sc").textContent="Accès refusé. Vérifie ton abonnement."}}
+
+/* ---------- Quiz ---------- */
+const QZ={bepc:[["Racine carrée de 144 ?",["10","12","14","16"],1],["Formule de l’eau ?",["CO2","O2","H2O","NaCl"],2],["Pluriel de « cheval » ?",["chevals","chevaux","chevaus","chevales"],1],["7 × 8 = ?",["54","56","58","64"],1]],
+ bac:[["Dérivée de x² ?",["x","2x","x²","2"],1],["Auteur des « Misérables » ?",["Victor Hugo","Émile Zola","Molière","Voltaire"],0],["Unité de force ?",["Joule","Watt","Newton","Pascal"],2],["Limite de 1/x en +∞ ?",["1","+∞","0","−∞"],2]],
+ concours:[["UEMOA signifie ?",["Union économique et monétaire ouest-africaine","Union européenne des marchés africains","Union des États du Maghreb","Union économique mondiale"],0],["15 % de 200 ?",["15","20","30","45"],2],["Suite : 2, 4, 8, 16, … ?",["24","30","32","36"],2],["Siège de l’Union africaine ?",["Dakar","Addis-Abeba","Nairobi","Abuja"],1]]};
+Object.entries(EX).forEach(([k,l])=>{const b=document.createElement("button");b.className="chip";b.textContent=l;b.onclick=()=>{qz={k,i:0,s:0,d:false};quiz()};$("#qc").appendChild(b)});
+function quiz(){const Q=QZ[qz.k],box=$("#qb");
+ if(qz.i>=Q.length){const best=P?.best?.[qz.k]??0;if(U&&P&&qz.s>best){P.best={...(P.best||{}),[qz.k]:qz.s};setDoc(doc(db,"users",U.uid),{best:P.best},{merge:true}).catch(()=>{})}
+  box.innerHTML=`<h3>Score : ${qz.s} / ${Q.length}</h3><p>${qz.s===Q.length?"Parfait !":qz.s>=2?"Bon début. Refais le quiz pour viser le sans-faute.":"Relis les corrigés, puis réessaie."}</p><button class="btn" id="ag">Recommencer</button>`;$("#ag").onclick=()=>{qz={k:qz.k,i:0,s:0,d:false};quiz()};return}
+ const[q,o,a]=Q[qz.i];box.innerHTML=`<div class="meta">Question ${qz.i+1} sur ${Q.length}</div><div class="q">${esc(q)}</div><div id="op"></div><div class="row"><button class="btn" id="nx" disabled>Suivant</button></div>`;
+ o.forEach((t,j)=>{const b=document.createElement("button");b.className="opt";b.textContent=t;b.onclick=()=>{if(qz.d)return;qz.d=true;if(j===a)qz.s++;[...$("#op").children].forEach((c,m)=>{if(m===a)c.classList.add("good");else if(m===j)c.classList.add("bad");c.disabled=true});$("#nx").disabled=false};$("#op").appendChild(b)});
+ $("#nx").onclick=()=>{qz.i++;qz.d=false;quiz()}}
+
+/* ---------- Tarifs et paiement KkiaPay ---------- */
+const PL=()=>[{id:"month",name:"Mensuel",price:+S.priceMonth,link:S.linkMonth,days:30,unit:"/ mois",perks:["Tous les sujets corrigés","Nouveaux sujets chaque mois"],best:1},{id:"pack",name:"Pack examen",price:+S.pricePack,link:S.linkPack,days:120,unit:"/ 4 mois",perks:["Tout le contenu premium","Valable jusqu’à l’examen"]}];
+function plans(){$("#plans").innerHTML=PL().map(p=>`<div class="plan ${p.best?"best":""}"><h3>${p.name}</h3><div class="price">${fcfa(p.price)} <small class="meta" style="font:600 15px sans-serif">${p.unit}</small></div><ul>${p.perks.map(x=>`<li>${x}</li>`).join("")}</ul><button class="btn ${p.best?"":"dark"}" data-p="${p.id}">Payer avec Mobile Money</button></div>`).join("");
+ $("#plans").querySelectorAll("button").forEach(b=>b.onclick=()=>pay(b.dataset.p))}
+function pay(id){if(!U){toast("Crée un compte avant de payer.");return openAuth(true)}const p=PL().find(x=>x.id===id);buyDlg({kind:"plan",id,label:"Abonnement "+p.name,price:p.price,link:p.link,days:p.days})}
+function buyDlg(it,sub){const d=$("#dlg");
+ d.innerHTML=`<h3>${esc(it.label)}</h3>${it.price?`<p>Montant : <b>${fcfa(it.price)}</b></p>`:""}
+ ${it.link?`<p><a class="btn" href="${esc(it.link)}" target="_blank" rel="noopener">1. Payer avec Mobile Money</a></p>`:`<p class="err">Le lien de paiement n’est pas encore disponible.${S.whatsapp?` Contacte-nous sur <a href="https://wa.me/${esc(S.whatsapp)}">WhatsApp</a>.`:""}</p>`}
+ <label for="rf">2. Après le paiement, entre la référence de la transaction ou le numéro utilisé</label><input id="rf" maxlength="80"><p class="err" id="err"></p>
+ <div class="row">${sub?'<button class="btn ghost" id="ab">Voir les abonnements</button>':""}<button class="btn ghost" id="x">Fermer</button><button class="btn dark" id="ok">J’ai payé</button></div>`;
+ d.showModal();$("#x").onclick=()=>d.close();if(sub)$("#ab").onclick=()=>{d.close();$("#tarifs").scrollIntoView()};
+ $("#ok").onclick=async()=>{const r=$("#rf").value.trim();if(!r)return $("#err").textContent="Indique la référence du paiement.";
+  try{await addDoc(collection(db,"payments"),{uid:U.uid,name:P?.name||"",email:U.email,kind:it.kind,itemId:it.id,label:it.label,amount:+it.price||0,days:it.days||0,ref:r,status:"pending",createdAt:serverTimestamp()});d.close();toast("Demande envoyée. Ton accès sera activé après vérification.")}catch(er){$("#err").textContent=em(er)}}}
+
+/* ---------- Espace admin ---------- */
+function showAdmin(v){$("#site").hidden=v;$("#adm").hidden=!v;if(v)admin()}
+$("#admBtn").onclick=()=>showAdmin($("#adm").hidden);
+function admin(){const t=$("#tabs");t.innerHTML="";[["site","Site"],["sujets","Sujets"],["pay","Paiements"]].forEach(([k,l])=>{const b=document.createElement("button");b.className="chip";b.textContent=l;b.setAttribute("aria-pressed",tab===k);b.onclick=()=>{tab=k;admin()};t.appendChild(b)});
+ const box=$("#abox");({site:admSite,sujets:admSujets,pay:admPay})[tab](box)}
+const FS=[["name","Nom du site"],["tagline","Slogan"],["heroTitle","Titre d’accueil","full"],["heroText","Texte d’accueil","area"],["whatsapp","WhatsApp (ex : 22997000000)"],["linkMonth","Lien de paiement — abonnement mensuel","full"],["linkPack","Lien de paiement — pack examen","full"],["priceMonth","Prix mensuel (FCFA)","number"],["pricePack","Prix pack examen (FCFA)","number"],["footer","Texte du bas de page","full"]];
+function admSite(box){box.innerHTML=`<form class="fm" id="sf"><h3>Identité et réglages</h3>${FS.map(([k,l,t])=>`<label class="${t==="full"||t==="area"?"full":""}">${l}${t==="area"?`<textarea name="${k}" rows="3">${esc(S[k])}</textarea>`:`<input name="${k}" type="${t==="number"?"number":"text"}" value="${esc(S[k])}">`}</label>`).join("")}
+ <label>Couleur principale<input type="color" name="color" value="${S.color}"></label><label>Couleur d’accent<input type="color" name="accent" value="${S.accent}"></label>
+ <label>Logo (image)<input type="file" name="logo" accept="image/*"></label><label>Photo d’accueil (image)<input type="file" name="hero" accept="image/*"></label>
+ <div class="row"><button class="btn red" type="button" id="rm">Retirer logo et photo</button><button class="btn">Enregistrer</button></div></form>`;
+ $("#rm").onclick=async()=>{S={...S,logo:"",hero:""};await setDoc(doc(db,"settings","site"),S);render();toast("Logo et photo retirés.")};
+ $("#sf").onsubmit=async e=>{e.preventDefault();const fd=new FormData(e.target),o={...S};FS.forEach(([k,,t])=>o[k]=t==="number"?+fd.get(k):fd.get(k).trim());
+  o.color=fd.get("color");o.accent=fd.get("accent");
+  try{for(const k of["linkMonth","linkPack"])if(o[k]&&!/^https:\/\//i.test(o[k]))throw new Error("Les liens de paiement doivent commencer par https://");const l=fd.get("logo"),h=fd.get("hero");if(l.size)o.logo=await shrink(l,360,.85);if(h.size)o.hero=await shrink(h,900,.72);
+   await setDoc(doc(db,"settings","site"),o);S=o;render();toast("Réglages enregistrés.")}catch(er){toast(em(er))}}}
+async function admSujets(box){await loadSujets();
+ box.innerHTML=`<form class="fm" id="sf"><h3>${ED?"Modifier le sujet":"Nouveau sujet"}</h3>
+ <label>Titre<input name="title" required></label><label>Examen<select name="exam">${Object.entries(EX).map(([k,v])=>`<option value="${k}">${v}</option>`).join("")}</select></label>
+ <label>Matière<input name="mat" required></label><label>Année<input name="an" type="number" value="${new Date().getFullYear()}"></label>
+ <label class="full"><input type="checkbox" name="free"> Sujet gratuit (sinon réservé aux abonnés ou aux acheteurs)</label>
+ <label>Prix de vente à l’unité (FCFA, facultatif)<input name="price" type="number" min="0"></label><label>Lien de paiement de ce sujet<input name="payLink" placeholder="https://…"></label>
+ <label class="full">Corrigé (texte)<textarea name="corrige" rows="5"></textarea></label>
+ <label>Photo / image<input type="file" name="image" accept="image/*"></label><label>PDF (5 Mo max)<input type="file" name="pdf" accept="application/pdf"></label>
+ <label class="full">Vidéo YouTube (lien)<input name="video" placeholder="https://youtu.be/…"></label>
+ <div class="row">${ED?'<button type="button" class="btn ghost" id="cn">Annuler</button>':""}<button class="btn" id="sv">Enregistrer</button></div></form>
+ ${SUJ.map(x=>`<div class="row2"><div><b>${esc(x.title)}</b><div class="meta">${EX[x.exam]||""} · ${esc(x.mat)} · ${x.an||""} · ${x.free?"Gratuit":"Premium"}</div></div><div><button class="btn sm dark" data-e="${x.id}">Modifier</button> <button class="btn sm red" data-d="${x.id}">Supprimer</button></div></div>`).join("")||'<div class="empty">Aucun sujet. Ajoute le premier ci-dessus.</div>'}`;
+ const f=$("#sf");
+ if(ED){const x=SUJ.find(s=>s.id===ED.id);["title","exam","mat","an","price","payLink"].forEach(k=>f.elements[k].value=x[k]??"");f.elements.free.checked=!!x.free;f.elements.corrige.value=ED.c.corrige||"";f.elements.video.value=ED.c.video||"";$("#cn").onclick=()=>{ED=null;admSujets(box)}}
+ box.querySelectorAll("[data-e]").forEach(b=>b.onclick=async()=>{ED={id:b.dataset.e,c:(await getDoc(doc(db,"sujetsContent",b.dataset.e))).data()||{}};admSujets(box);scrollTo(0,0)});
+ box.querySelectorAll("[data-d]").forEach(b=>b.onclick=async()=>{if(!confirm("Supprimer ce sujet et ses fichiers ?"))return;const id=b.dataset.d,c=(await getDoc(doc(db,"sujetsContent",id))).data()||{};
+  await mediaOp(c.imageId);await mediaOp(c.pdfId);await deleteDoc(doc(db,"sujetsContent",id));await deleteDoc(doc(db,"sujets",id));await loadSujets();list();admSujets(box)});
+ f.onsubmit=async e=>{e.preventDefault();const fd=new FormData(f),btn=$("#sv");btn.disabled=true;btn.textContent="Envoi en cours…";
+  try{const pl=fd.get("payLink").trim();if(pl&&!/^https:\/\//i.test(pl))throw new Error("Le lien de paiement doit commencer par https://");const free=fd.has("free"),id=ED?.id||doc(collection(db,"sujets")).id,c={...(ED?.c||{})};
+   if(ED&&!!ED.c.free!==free){await mediaOp(c.imageId,free);await mediaOp(c.pdfId,free)}
+   const im=fd.get("image"),pd=fd.get("pdf");
+   if(im.size){await mediaOp(c.imageId);c.imageId=await upload(im,free,1100,id)}
+   if(pd.size){await mediaOp(c.pdfId);c.pdfId=await upload(pd,free,0,id)}
+   c.free=free;c.corrige=fd.get("corrige");c.video=fd.get("video").trim();
+   await setDoc(doc(db,"sujetsContent",id),c);await setDoc(doc(db,"sujets",id),{title:fd.get("title").trim(),exam:fd.get("exam"),mat:fd.get("mat").trim(),an:+fd.get("an")||0,free,price:+fd.get("price")||0,payLink:pl});
+   ED=null;await loadSujets();list();toast("Sujet enregistré.");admSujets(box)}
+  catch(er){toast(em(er));btn.disabled=false;btn.textContent="Enregistrer"}}}
+async function admPay(box){box.innerHTML="Chargement…";
+ try{const L=(await getDocs(query(collection(db,"payments"),where("status","==","pending")))).docs;
+  box.innerHTML=`<p class="sub">Vérifie chaque référence dans ton compte de paiement avant de valider.</p>`+(L.map(d=>{const x=d.data();return`<div class="row2"><div><b>${esc(x.name)}</b> · ${esc(x.email)}<div class="meta">${esc(x.label)} · ${fcfa(x.amount)} · Réf. ${esc(x.ref)}</div></div><div><button class="btn sm" data-ok="${d.id}">Valider</button> <button class="btn sm red" data-no="${d.id}">Refuser</button></div></div>`}).join("")||'<div class="empty">Aucun paiement en attente.</div>');
+  box.querySelectorAll("[data-ok]").forEach(b=>b.onclick=async()=>{const d=L.find(z=>z.id===b.dataset.ok),x=d.data();try{if(x.kind==="sujet")await setDoc(doc(db,"access",x.uid+"_"+x.itemId),{uid:x.uid,sid:x.itemId});else{const u=await getDoc(doc(db,"users",x.uid)),cur=Math.max(Date.now(),u.data()?.premiumUntil||0);
+   await setDoc(u.ref,{premiumUntil:cur+x.days*864e5},{merge:true})}await setDoc(d.ref,{status:"approved"},{merge:true});toast("Abonnement activé.");admPay(box)}catch(er){toast(em(er))}});
+  box.querySelectorAll("[data-no]").forEach(b=>b.onclick=async()=>{await setDoc(doc(db,"payments",b.dataset.no),{status:"refused"},{merge:true});admPay(box)})
+ }catch(er){box.textContent=em(er)}}
+
+$("#dlg").addEventListener("click",e=>{if(e.target===e.currentTarget)e.currentTarget.close()});
+render();loadSettings();loadSujets().then(list);
+</script>
+</body>
+</html>
