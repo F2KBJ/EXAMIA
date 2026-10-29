@@ -4,87 +4,143 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Examia</title>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<meta name="description" content="Annales corrigées, quiz et cours pour le BEPC, le BAC et les concours.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#14213d;--acc:#ffc933;--paper:#f6f8fb;--line:#dde3ee;--muted:#5b6785;--green:#1e8e5a;--red:#c8372d;--blue:#2447c5}
-*{box-sizing:border-box}html{scroll-behavior:smooth}
-body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.55 "Source Sans 3",system-ui,sans-serif}
-h1,h2,h3{font-family:"Bricolage Grotesque",system-ui,sans-serif;line-height:1.1;margin:0}
-button,input,select,textarea{font:inherit}
+:root{--ink:#0f1b3d;--acc:#ffc933;--paper:#f5f7fb;--card:#fff;--line:#d9e0ee;--tx:#14213d;--muted:#5a6584;--blue:#2447c5;--green:#12805c;--red:#c8372d;--c-bepc:#2447c5;--c-bac:#12805c;--c-concours:#b4541a}
+[data-t=d]{--paper:#0b1226;--card:#131c36;--line:#243055;--tx:#e8ecf8;--muted:#9aa6c7;--blue:#8aa4ff;--green:#4cc79a;--red:#ff8a80;--c-bepc:#8aa4ff;--c-bac:#4cc79a;--c-concours:#f0a36b}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{margin:0;background:var(--paper);color:var(--tx);font:17px/1.6 "Source Sans 3",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.disp{font-family:"Bricolage Grotesque",system-ui,sans-serif;line-height:1.12;margin:0;letter-spacing:-.02em}
+h2{font-size:clamp(26px,3.4vw,38px)}h3{font-size:20px}a{color:var(--blue)}
+button,input,select,textarea{font:inherit}[hidden]{display:none!important}
 :focus-visible{outline:3px solid var(--blue);outline-offset:2px}
-.wrap{width:min(1080px,calc(100% - 32px));margin:auto}
-header{background:var(--ink);color:#fff;position:sticky;top:0;z-index:20}
-.nav{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:64px;flex-wrap:wrap}
-.logo{font:800 24px "Bricolage Grotesque",sans-serif;color:#fff;text-decoration:none;display:flex;align-items:center;gap:10px}
+.wrap{width:min(1120px,calc(100% - 32px));margin:auto}.pad{padding:40px 0}
+.meta,.sub{color:var(--muted)}.sub{margin:8px 0 24px;max-width:640px}
+#ann{background:var(--acc);color:#14213d;text-align:center;padding:8px 16px;font-weight:700;font-size:15px}
+header{background:var(--ink);color:#fff;position:sticky;top:0;z-index:30;border-bottom:1px solid rgba(255,255,255,.12)}
+.nav{display:flex;align-items:center;gap:8px;min-height:66px;flex-wrap:wrap}
+.logo{font:800 24px "Bricolage Grotesque",sans-serif;color:#fff;text-decoration:none;display:flex;align-items:center;gap:10px;margin-right:auto}
 .logo img{height:38px;width:auto;border-radius:6px}
-nav{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-nav a{color:#cfd6ea;text-decoration:none;padding:8px 10px;border-radius:8px;font-weight:600;font-size:15px}
-.btn{border:0;border-radius:10px;padding:11px 18px;font-weight:700;cursor:pointer;background:var(--acc);color:#14213d}
-.btn.dark{background:var(--ink);color:#fff}.btn.ghost{background:transparent;border:2px solid var(--line);color:inherit}.btn.red{background:var(--red);color:#fff}
-.btn.sm{padding:7px 12px;font-size:14px}.btn[disabled]{opacity:.5;cursor:not-allowed}
-.hero{padding:56px 0;background:var(--ink);color:#fff}
-.hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
-.hero h1{font-size:clamp(34px,5vw,54px);letter-spacing:-1.5px}.hero p{color:#cfd6ea;font-size:19px;max-width:520px}
-.hero img{width:100%;border-radius:12px;max-height:340px;object-fit:cover}
-section{padding:48px 0}section h2{font-size:clamp(26px,3.5vw,36px);margin-bottom:8px}
-.sub,.meta{color:var(--muted)}.sub{margin:0 0 22px;max-width:620px}
+header nav{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+header nav a{color:#cfd6ea;text-decoration:none;padding:8px 11px;border-radius:8px;font-weight:600;font-size:15px}
+header nav a:hover{background:rgba(255,255,255,.1);color:#fff}
+#acct{display:flex;gap:8px;align-items:center}
+.btn{border:0;border-radius:9px;padding:11px 18px;font-weight:700;cursor:pointer;background:var(--acc);color:#14213d;text-decoration:none;display:inline-block;text-align:center}
+.btn:hover{filter:brightness(.94)}.btn.dark{background:var(--ink);color:#fff}
+.btn.ghost{background:transparent;border:2px solid var(--line);color:var(--tx)}.btn.gw{background:transparent;border:2px solid rgba(255,255,255,.3);color:#fff}
+.btn.red{background:var(--red);color:#fff}.btn.sm{padding:7px 12px;font-size:14px}.btn.w{width:100%}.btn[disabled]{opacity:.5;cursor:not-allowed}
+.icon{background:transparent;border:2px solid rgba(255,255,255,.3);color:#fff;border-radius:9px;width:38px;height:38px;cursor:pointer;font-size:16px}
+/* Accueil : page de cahier seyès */
+.hero{background:var(--ink);color:#fff;position:relative;overflow:hidden;padding:64px 0 56px}
+.hero:before{content:"";position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent 0 31px,rgba(255,255,255,.07) 31px 32px),repeating-linear-gradient(90deg,transparent 0 127px,rgba(255,255,255,.05) 127px 128px)}
+.hero:after{content:"";position:absolute;top:0;bottom:0;left:max(10px,calc((100% - 1120px)/2 - 18px));width:2px;background:rgba(240,110,110,.6)}
+.hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:1.15fr .85fr;gap:44px;align-items:center}
+.hero h1{font-size:clamp(36px,5.4vw,60px);letter-spacing:-.035em}.hero p{color:#cfd6ea;font-size:19px;max-width:540px}
+.hsearch{display:flex;gap:8px;margin:24px 0 14px;max-width:560px}.hsearch input{flex:1}
+.hstat{color:#aab4d0;font-size:15px}
+.copie{background:#fff;color:#14213d;border-radius:4px;padding:22px 22px 22px 54px;transform:rotate(1.4deg);position:relative;font:600 19px/32px "Source Sans 3",sans-serif;background-image:repeating-linear-gradient(transparent 0 31px,#cfe0f5 31px 32px);box-shadow:0 24px 50px rgba(0,0,0,.35)}
+.copie:before{content:"";position:absolute;left:40px;top:0;bottom:0;width:2px;background:#f0a1a1}
+.copie .r{color:#c8372d;font-weight:700}.copie .g{color:#12805c}
+.hero img.himg{width:100%;border-radius:12px;max-height:360px;object-fit:cover}
+input,select,textarea{width:100%;padding:11px 13px;border:2px solid var(--line);border-radius:9px;background:var(--card);color:var(--tx)}
+input[type=checkbox]{width:auto}input[type=color]{padding:2px;height:44px}
+/* Examens */
+.exams{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.exam{text-align:left;background:var(--card);border:2px solid var(--line);border-left:8px solid var(--c);border-radius:6px 14px 14px 6px;padding:20px;cursor:pointer;color:var(--tx);display:flex;flex-direction:column;gap:4px}
+.exam b{font:800 26px "Bricolage Grotesque",sans-serif;color:var(--c)}.exam span{color:var(--muted);font-size:15px}.exam em{font-style:normal;font-weight:700;margin-top:6px}
+.e-bepc{--c:var(--c-bepc)}.e-bac{--c:var(--c-bac)}.e-concours{--c:var(--c-concours)}
+/* Bibliothèque */
+.bar{display:grid;grid-template-columns:2fr repeat(4,1fr);gap:10px;margin-bottom:12px}
 .tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
-.chip{border:2px solid var(--line);background:#fff;border-radius:999px;padding:7px 16px;font-weight:700;cursor:pointer;color:var(--ink)}
+.chip{border:2px solid var(--line);background:var(--card);border-radius:999px;padding:6px 15px;font-weight:700;cursor:pointer;color:var(--tx)}
 .chip[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:#fff}
-input,select,textarea{width:100%;padding:10px 12px;border:2px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
-input[type=checkbox]{width:auto}input[type=color]{padding:2px;height:42px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
-.card,.plan,.quiz,.row2{background:#fff;border:2px solid var(--line);border-radius:12px;padding:18px}
-.card,.plan{display:flex;flex-direction:column;gap:8px}.card .btn,.plan .btn{margin-top:auto}
-.badge{align-self:flex-start;font-weight:700;font-size:13px;padding:3px 10px;border-radius:6px;background:#e3f4ea;color:var(--green)}.badge.pro{background:#fff1c2;color:#7a5a00}
-.empty{padding:24px;border:2px dashed var(--line);border-radius:12px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.fiche{background:var(--card);border:2px solid var(--line);border-top:6px solid var(--c);border-radius:4px 4px 14px 14px;padding:16px 18px 18px;display:flex;flex-direction:column;gap:10px}
+.fiche .top{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:14px;font-weight:600}
+.fiche h3{font-size:21px}.fiche .btn{margin-top:auto}
+.fav{background:none;border:0;font-size:22px;cursor:pointer;color:var(--c);line-height:1}
+.tags{display:flex;gap:6px;flex-wrap:wrap}.tags i{font-style:normal;font-size:13px;font-weight:700;padding:2px 9px;border-radius:5px;background:var(--line);color:var(--tx)}
+.tags i.ok{background:#e3f4ea;color:#12805c}.tags i.pro{background:#fff1c2;color:#7a5a00}
+.empty{padding:26px;border:2px dashed var(--line);border-radius:12px;color:var(--muted)}
+/* Etapes, quiz, tarifs, FAQ */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:0;border:2px solid var(--line);border-radius:14px;background:var(--card);overflow:hidden}
+.steps div{padding:24px;border-right:2px solid var(--line)}.steps div:last-child{border:0}
+.steps b{display:block;font:800 34px "Bricolage Grotesque",sans-serif;color:var(--blue);margin-bottom:4px}
+.quiz{background:var(--card);border:2px solid var(--line);border-radius:14px;padding:24px;max-width:700px}
 .q{font:700 22px "Bricolage Grotesque",sans-serif;margin:8px 0 16px}
-.opt{display:block;width:100%;text-align:left;margin:8px 0;padding:12px 14px;border-radius:10px;border:2px solid var(--line);background:#fff;cursor:pointer;font-weight:600}
-.opt.good{background:#e3f4ea;border-color:var(--green)}.opt.bad{background:#fde6e3;border-color:var(--red)}
-.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
-.plan.best{border-color:var(--ink);box-shadow:6px 6px 0 var(--acc)}
-.price{font:800 32px "Bricolage Grotesque",sans-serif}.plan ul{margin:0;padding-left:20px;color:var(--muted)}
-dialog{border:0;border-radius:16px;padding:26px;width:min(520px,calc(100% - 24px));max-height:88vh;box-shadow:0 20px 60px rgba(0,0,0,.4)}
-dialog::backdrop{background:rgba(20,33,61,.6)}dialog h3{font-size:24px;margin-bottom:10px}
+.opt{display:block;width:100%;text-align:left;margin:8px 0;padding:12px 14px;border-radius:9px;border:2px solid var(--line);background:var(--card);cursor:pointer;font-weight:600;color:var(--tx)}
+.opt:hover:not(:disabled){border-color:var(--blue)}.opt.good{background:#e3f4ea;border-color:#12805c;color:#0b4d38}.opt.bad{background:#fde6e3;border-color:#c8372d;color:#8a1f17}
+.prog{height:8px;background:var(--line);border-radius:99px;overflow:hidden}.prog i{display:block;height:100%;background:var(--acc);transition:width .3s}
+.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;align-items:stretch}
+.plan{background:var(--card);border:2px solid var(--line);border-radius:14px;padding:24px;display:flex;flex-direction:column;gap:10px}
+.plan.best{border-color:var(--ink);outline:4px solid var(--acc);outline-offset:-2px}
+.price{font:800 34px "Bricolage Grotesque",sans-serif}.price small{font:600 15px "Source Sans 3",sans-serif;color:var(--muted)}
+.plan ul{margin:0;padding:0;list-style:none;color:var(--muted)}.plan li{padding:5px 0 5px 24px;position:relative}.plan li:before{content:"✓";position:absolute;left:0;color:var(--green);font-weight:800}.plan .btn{margin-top:auto}
+details{background:var(--card);border:2px solid var(--line);border-radius:10px;padding:14px 18px;margin-bottom:10px}
+summary{font-weight:700;cursor:pointer}details p{margin:10px 0 0;color:var(--muted)}
+footer{background:var(--ink);color:#aab4d0;padding:40px 0 24px;font-size:15px;margin-top:20px}
+.fcols{display:grid;grid-template-columns:2fr 1fr 1fr;gap:30px}.fcols a{color:#dfe5f6;display:block;text-decoration:none;padding:3px 0}.fcols b{color:#fff}
+.copy{border-top:1px solid rgba(255,255,255,.12);margin-top:26px;padding-top:16px}
+/* Espace membre / admin */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:18px 0 28px}
+.kpis div{background:var(--card);border:2px solid var(--line);border-radius:10px;padding:14px 16px}.kpis b{display:block;font:800 28px "Bricolage Grotesque",sans-serif}.kpis span{color:var(--muted);font-size:14px}
+.fm{background:var(--card);border:2px solid var(--line);border-radius:12px;padding:18px;margin-bottom:20px;display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+.fm h3,.fm .full,.fm .row{grid-column:1/-1}
+.row2{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap;background:var(--card);border:2px solid var(--line);border-radius:10px;padding:12px 16px}
 label{display:block;font-weight:700;margin:12px 0 4px;font-size:15px}
 .row{display:flex;gap:10px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}
-.corr{background:#f1f5fb;border-left:4px solid var(--green);padding:12px 14px;border-radius:6px;white-space:pre-line;margin:10px 0}
-.err{color:var(--red);font-weight:600;min-height:22px;margin:8px 0 0}
-.tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
-.fm{background:#fff;border:2px solid var(--line);border-radius:12px;padding:18px;margin-bottom:20px;display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
-.fm h3,.fm .full,.fm .row{grid-column:1/-1}
-.row2{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap}
-#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 20px;border-radius:10px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .25s;z-index:50;max-width:92vw}
-#toast.on{opacity:1}
-footer{background:var(--ink);color:#aab4d0;padding:26px 0;font-size:15px}footer a{color:var(--acc)}
-@media(max-width:760px){.hero .wrap,.fm{grid-template-columns:1fr}}
+dialog{border:0;border-radius:16px;padding:26px;width:min(540px,calc(100% - 24px));max-height:90vh;background:var(--card);color:var(--tx);box-shadow:0 24px 70px rgba(0,0,0,.45)}
+dialog::backdrop{background:rgba(10,18,40,.65)}dialog h3{font-size:24px;margin-bottom:10px}
+.corr{background:rgba(18,128,92,.08);border-left:4px solid var(--green);padding:12px 14px;border-radius:6px;white-space:pre-line;margin:12px 0}
+.err{color:var(--red);font-weight:600;min-height:22px;margin:8px 0 0}.sep{text-align:center;color:var(--muted);margin:14px 0}
+.st{font-weight:700;font-size:13px;padding:2px 9px;border-radius:5px}.st.pending{background:#fff1c2;color:#7a5a00}.st.approved{background:#e3f4ea;color:#12805c}.st.refused{background:#fde6e3;color:#8a1f17}
+#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#14213d;color:#fff;padding:12px 20px;border-radius:10px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .25s;z-index:60;max-width:92vw}#toast.on{opacity:1}
+@media(max-width:860px){.hero .wrap,.fm,.fcols{grid-template-columns:1fr}.bar{grid-template-columns:1fr 1fr}.bar input{grid-column:1/-1}.copie{transform:none}.hsearch{flex-wrap:wrap}.steps div{border-right:0;border-bottom:2px solid var(--line)}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
-<header><div class="wrap nav"><a class="logo" href="#" id="brand"></a>
-<nav><a href="#sujets" class="pub">Sujets</a><a href="#quiz" class="pub">Quiz</a><a href="#tarifs" class="pub">Tarifs</a>
-<button class="btn sm dark" id="admBtn" hidden style="border:2px solid var(--acc)">Espace admin</button>
-<button class="btn sm" id="authBtn">Connexion</button></nav></div></header>
+<div id="ann" hidden></div>
+<header><div class="wrap nav"><a class="logo" href="#top" id="brand"></a>
+<nav><a href="#sujets">Sujets</a><a href="#quiz">Quiz</a><a href="#tarifs">Tarifs</a><a href="#faq">FAQ</a></nav>
+<div id="acct"></div><button class="icon" id="theme" aria-label="Changer le thème">◐</button></div></header>
 
-<main id="site">
-<div class="hero"><div class="wrap"><div><h1 id="hT"></h1><p id="hP"></p><p><a class="btn" href="#sujets">Voir les sujets</a></p></div><div id="hImg"></div></div></div>
-<section id="sujets"><div class="wrap"><h2>Sujets corrigés</h2><p class="sub">Les sujets gratuits sont ouverts à tous. Les sujets premium demandent un abonnement actif.</p>
-<div class="tools" id="chips"></div><div class="grid" id="list"></div></div></section>
-<section id="quiz" style="background:#eaeff7"><div class="wrap"><h2>Quiz d’entraînement</h2><p class="sub">Choisis un examen et réponds à 4 questions.</p>
+<main id="site"><span id="top"></span>
+<section class="hero"><div class="wrap"><div>
+ <h1 id="hT"></h1><p id="hP"></p>
+ <form class="hsearch" id="hs"><input id="hq" type="search" placeholder="Chercher une matière, un sujet…" aria-label="Rechercher"><button class="btn">Rechercher</button></form>
+ <div class="hstat" id="stats"></div></div>
+ <div id="hImg"></div></div></section>
+
+<section class="pad"><div class="wrap"><h2>Choisis ton examen</h2><p class="sub">Un espace pour chaque examen, avec ses annales corrigées.</p><div class="exams" id="exams"></div></div></section>
+
+<section class="pad" id="sujets" style="padding-top:8px"><div class="wrap"><h2>Bibliothèque de sujets</h2><p class="sub">Filtre par examen, matière ou année. Enregistre tes favoris et marque les sujets terminés.</p>
+<div class="bar"><input id="q" type="search" placeholder="Chercher un sujet…" aria-label="Chercher"><select id="fm" aria-label="Matière"></select><select id="fa" aria-label="Année"></select>
+<select id="fp" aria-label="Accès"><option value="">Tous les accès</option><option value="free">Gratuits</option><option value="pro">Premium</option><option value="fav">Mes favoris</option></select>
+<select id="fs" aria-label="Tri"><option value="">Plus récents</option><option value="az">Ordre alphabétique</option><option value="free">Gratuits d’abord</option></select></div>
+<div class="tools" id="chips"></div><p class="meta" id="cnt" role="status"></p><div class="grid" id="list"></div></div></section>
+
+<section class="pad" style="background:var(--card)"><div class="wrap"><h2>Comment ça marche</h2><p class="sub">Trois étapes, sans carte bancaire.</p>
+<div class="steps"><div><b>1</b><h3>Crée ton compte</h3><p class="meta">Gratuit, avec ton e-mail ou ton compte Google.</p></div><div><b>2</b><h3>Choisis ton sujet</h3><p class="meta">Ouvre un sujet gratuit ou débloque un sujet premium.</p></div><div><b>3</b><h3>Révise et progresse</h3><p class="meta">Corrigés, PDF, vidéos et quiz pour t’entraîner.</p></div></div></div></section>
+
+<section class="pad" id="quiz"><div class="wrap"><h2>Quiz d’entraînement</h2><p class="sub">Jusqu’à 10 questions tirées au hasard. Ton meilleur score est gardé dans ton espace.</p>
 <div class="tools" id="qc"></div><div class="quiz" id="qb">Choisis un examen pour commencer.</div></div></section>
-<section id="tarifs"><div class="wrap"><h2>Tarifs</h2><p class="sub" id="pstat">Paiement par Mobile Money. Pas de carte bancaire nécessaire.</p><div class="plans" id="plans"></div></div></section>
+
+<section class="pad" id="tarifs" style="background:var(--card)"><div class="wrap"><h2>Tarifs</h2><p class="sub" id="pstat"></p><div class="plans" id="plans"></div></div></section>
+<section class="pad" id="faq"><div class="wrap"><h2>Questions fréquentes</h2><p class="sub"></p><div id="faqs" style="max-width:760px"></div></div></section>
 </main>
 
-<main id="adm" hidden><div class="wrap" style="padding:30px 0">
-<h2>Espace admin</h2><div class="tabs" id="tabs"></div><div id="abox"></div></div></main>
+<main id="me" hidden><div class="wrap pad" id="mebox"></div></main>
+<main id="adm" hidden><div class="wrap pad"><h2>Espace admin</h2><div class="tools" id="tabs" style="margin-top:16px"></div><div id="abox"></div></div></main>
 
-<footer><div class="wrap" id="foot"></div></footer>
+<footer><div class="wrap"><div class="fcols" id="foot"></div><div class="copy" id="copy"></div></div></footer>
 <dialog id="dlg"></dialog><div id="toast" role="status" aria-live="polite"></div>
 
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {getAuth,onAuthStateChanged,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,sendEmailVerification} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {getAuth,onAuthStateChanged,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,sendEmailVerification,sendPasswordResetEmail,updateProfile,GoogleAuthProvider,signInWithPopup} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import {getFirestore,doc,getDoc,setDoc,deleteDoc,addDoc,collection,getDocs,query,where,serverTimestamp,writeBatch} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const app=initializeApp({apiKey:"AIzaSyCyjp0R0ARrfqusvxXNyiyXm1y83DWXKK8",authDomain:"f2kexamia.firebaseapp.com",projectId:"f2kexamia",storageBucket:"f2kexamia.firebasestorage.app",messagingSenderId:"799236673979",appId:"1:799236673979:web:aa08ac5767d32d048b749e"});
@@ -92,16 +148,25 @@ const auth=getAuth(app),db=getFirestore(app);
 
 /* ---------- Outils ---------- */
 const $=s=>document.querySelector(s),esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const fcfa=n=>Number(n).toLocaleString("fr-FR")+" FCFA";
-const toast=m=>{const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove("on"),3500)};
-const ERR={"auth/invalid-credential":"E-mail ou mot de passe incorrect.","auth/email-already-in-use":"Cet e-mail a déjà un compte.","auth/weak-password":"Mot de passe trop court (6 caractères minimum).","auth/invalid-email":"Adresse e-mail invalide.","auth/too-many-requests":"Trop d’essais. Réessaie plus tard.","permission-denied":"Action refusée par les règles de sécurité."};
+const fcfa=n=>Number(n||0).toLocaleString("fr-FR")+" FCFA",fdate=t=>new Date(t).toLocaleDateString("fr-FR");
+const LS={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}};
+const toast=m=>{const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove("on"),3800)};
+const ERR={"auth/invalid-credential":"E-mail ou mot de passe incorrect.","auth/wrong-password":"E-mail ou mot de passe incorrect.","auth/user-not-found":"E-mail ou mot de passe incorrect.","auth/email-already-in-use":"Cet e-mail a déjà un compte. Connecte-toi.","auth/weak-password":"Mot de passe trop court (6 caractères minimum).","auth/invalid-email":"Adresse e-mail invalide.","auth/too-many-requests":"Trop d’essais. Réessaie dans quelques minutes.","auth/operation-not-allowed":"Cette méthode de connexion n’est pas activée dans Firebase (Authentication > Méthode de connexion).","auth/unauthorized-domain":"Ce domaine n’est pas autorisé dans Firebase (Authentication > Paramètres > Domaines autorisés).","auth/network-request-failed":"Problème de connexion internet.","auth/popup-closed-by-user":"Fenêtre fermée avant la fin.","auth/configuration-not-found":"Authentication n’est pas encore activé dans la console Firebase.","permission-denied":"Refusé par les règles de sécurité Firestore. Vérifie qu’elles sont publiées.","unavailable":"Firestore est injoignable. Vérifie ta connexion."};
 const em=e=>ERR[e.code]||ERR[(e.code||"").replace("firestore/","")]||e.message||"Erreur inconnue.";
-const EX={bepc:"BEPC",bac:"BAC",concours:"Concours"};
-const DEF={name:"Examia",tagline:"Prépare. Révise. Réussis.",heroTitle:"Prépare ton examen avec des sujets corrigés.",heroText:"BEPC, BAC et concours : annales, corrections détaillées et quiz pour t’entraîner. Paiement par Mobile Money.",color:"#14213d",accent:"#ffc933",whatsapp:"",linkMonth:"",linkPack:"",priceMonth:1500,pricePack:5000,footer:"",logo:"",hero:""};
-let S={...DEF},U=null,P=null,ADM=false,AC=new Set(),SUJ=[],filter="all",term="",ED=null,payCtx=null,qz=null,tab="site";
-const premium=()=>!!P&&P.premiumUntil>Date.now(),ADMIN="franckadre7@gmail.com",can=x=>x.free||premium()||AC.has(x.id);
+const EX={bepc:"BEPC",bac:"BAC",concours:"Concours"},EXD={bepc:"Brevet d’études du premier cycle",bac:"Baccalauréat, toutes séries",concours:"Fonction publique et grandes écoles"};
+const DEF={name:"Examia",tagline:"Prépare. Révise. Réussis.",announce:"",heroTitle:"Prépare ton examen avec des sujets corrigés.",heroText:"BEPC, BAC et concours : annales, corrections détaillées et quiz pour t’entraîner. Paiement par Mobile Money.",color:"#0f1b3d",accent:"#ffc933",whatsapp:"",linkMonth:"",linkPack:"",priceMonth:1500,pricePack:5000,footer:"",logo:"",hero:"",
+ faq:"Comment payer mon abonnement ? :: Clique sur Payer, règle par Mobile Money avec le lien, puis envoie la référence de ta transaction. Ton accès est activé après vérification.\nCombien de temps pour l’activation ? :: En général quelques heures. Écris-nous sur WhatsApp si tu attends plus longtemps.\nPuis-je acheter un seul sujet ? :: Oui, chaque sujet premium peut être acheté à l’unité quand un prix est indiqué."};
+const ADMIN="franckadre7@gmail.com";
+let S={...DEF},U=null,P=null,ADM=false,AC=new Set(),SUJ=[],QB=[],view="site",ED=null,tab="dash",signing=false,qz=null;
+let F={exam:"",mat:"",an:"",acc:"",sort:"",term:""},FAV=new Set(LS.get("fav",[])),DONE=LS.get("done",{});
+const premium=()=>!!P&&P.premiumUntil>Date.now(),can=x=>x.free||premium()||AC.has(x.id);
+const mats=()=>[...new Set(SUJ.map(x=>x.mat))].sort(),years=()=>[...new Set(SUJ.map(x=>x.an).filter(Boolean))].sort((a,b)=>b-a);
 
-/* ---------- Médias (gratuit : tout est stocké dans Firestore) ---------- */
+/* ---------- Thème ---------- */
+document.documentElement.dataset.t=LS.get("theme",matchMedia("(prefers-color-scheme:dark)").matches?"d":"l");
+$("#theme").onclick=()=>{const t=document.documentElement.dataset.t==="d"?"l":"d";document.documentElement.dataset.t=t;LS.set("theme",t)};
+
+/* ---------- Médias (gratuit : tout est dans Firestore) ---------- */
 const readFile=f=>new Promise((ok,ko)=>{const r=new FileReader();r.onload=()=>ok(r.result);r.onerror=ko;r.readAsDataURL(f)});
 async function shrink(f,max,q){const i=new Image();i.src=await readFile(f);await i.decode();const k=Math.min(1,max/Math.max(i.width,i.height)),c=document.createElement("canvas");c.width=i.width*k;c.height=i.height*k;c.getContext("2d").drawImage(i,0,0,c.width,c.height);return c.toDataURL("image/webp",q||.8)}
 async function upload(f,pub,max,sid){
@@ -119,43 +184,85 @@ async function mediaOp(id,pub){if(!id)return;const m=await getDoc(doc(db,"media"
  pub===undefined?b.delete(m.ref):b.update(m.ref,{pub});await b.commit()}
 
 /* ---------- Authentification ---------- */
-async function refresh(){P=null;ADM=false;AC=new Set();if(U){try{const p=await getDoc(doc(db,"users",U.uid));P=p.exists()?p.data():null;ADM=U.email===ADMIN&&U.emailVerified;
+async function refresh(){P=null;ADM=false;AC=new Set();
+ if(U){try{const ref=doc(db,"users",U.uid);let p=await getDoc(ref);
+  if(!p.exists()){await setDoc(ref,{name:U.displayName||U.email.split("@")[0],email:U.email,premiumUntil:0,best:{}});p=await getDoc(ref)}
+  P=p.data();ADM=U.email===ADMIN&&U.emailVerified;
   if(U.email===ADMIN&&!U.emailVerified&&!refresh.m){refresh.m=1;sendEmailVerification(U).catch(()=>{});toast("Vérifie ta boîte e-mail pour activer l’espace admin, puis reconnecte-toi.")}
-  AC=new Set((await getDocs(query(collection(db,"access"),where("uid","==",U.uid)))).docs.map(d=>d.data().sid))}catch{}}render()}
-onAuthStateChanged(auth,u=>{U=u;refresh()});
-$("#authBtn").onclick=()=>U?signOut(auth).then(()=>{showAdmin(false);toast("Tu es déconnecté.")}):openAuth();
-function openAuth(signup){
- const d=$("#dlg");d.innerHTML=`<h3>${signup?"Créer un compte":"Connexion"}</h3><form id="f" novalidate>
- ${signup?'<label for="n">Nom complet</label><input id="n" autocomplete="name">':""}
- <label for="e">E-mail</label><input id="e" type="email" autocomplete="email"><label for="p">Mot de passe</label><input id="p" type="password" autocomplete="${signup?"new-password":"current-password"}">
- <p class="err" id="err"></p><div class="row"><button type="button" class="btn ghost" id="sw">${signup?"J’ai déjà un compte":"Créer un compte"}</button><button class="btn">${signup?"Créer mon compte":"Me connecter"}</button></div></form>`;
- d.showModal();$("#sw").onclick=()=>openAuth(!signup);
- $("#f").onsubmit=async ev=>{ev.preventDefault();const e=$("#e").value.trim(),p=$("#p").value,n=signup?$("#n").value.trim():"";
-  if(signup&&!n)return $("#err").textContent="Indique ton nom.";
-  try{if(signup){const c=await createUserWithEmailAndPassword(auth,e,p);U=c.user;await setDoc(doc(db,"users",U.uid),{name:n,email:e,premiumUntil:0,best:{}});await refresh()}
-   else await signInWithEmailAndPassword(auth,e,p);d.close();toast("Bienvenue !")}catch(er){$("#err").textContent=em(er)}}}
+  AC=new Set((await getDocs(query(collection(db,"access"),where("uid","==",U.uid)))).docs.map(d=>d.data().sid))
+ }catch(e){toast(em(e))}}
+ render()}
+onAuthStateChanged(auth,u=>{U=u;if(!signing)refresh()});
+function openAuth(mode){const d=$("#dlg"),up=mode==="up",rs=mode==="reset";
+ d.innerHTML=`<h3>${rs?"Mot de passe oublié":up?"Créer un compte":"Connexion"}</h3>
+ ${location.protocol==="file:"?'<p class="err">Ouvre le site depuis son adresse en ligne (https://…). La connexion ne fonctionne pas depuis un fichier ouvert sur l’ordinateur.</p>':""}
+ <form id="f" novalidate>${up?'<label for="n">Nom complet</label><input id="n" autocomplete="name">':""}
+ <label for="e">E-mail</label><input id="e" type="email" autocomplete="email">
+ ${rs?"":`<label for="p">Mot de passe</label><input id="p" type="password" autocomplete="${up?"new-password":"current-password"}">`}
+ <p class="err" id="err" role="alert"></p><div class="row"><button class="btn w">${rs?"Envoyer le lien":up?"Créer mon compte":"Me connecter"}</button></div></form>
+ ${rs?"":'<div class="sep">ou</div><button class="btn ghost w" id="gg" type="button">Continuer avec Google</button>'}
+ <p class="meta" style="margin-top:14px">${rs?'<a href="#" id="l1">Retour à la connexion</a>':up?'Déjà un compte ? <a href="#" id="l1">Se connecter</a>':'<a href="#" id="l2">Mot de passe oublié ?</a> · <a href="#" id="l3">Créer un compte</a>'}</p>`;
+ d.showModal();const lk=(i,m)=>{const a=$(i);if(a)a.onclick=e=>{e.preventDefault();openAuth(m)}};lk("#l1","in");lk("#l2","reset");lk("#l3","up");
+ if($("#gg"))$("#gg").onclick=async()=>{try{await signInWithPopup(auth,new GoogleAuthProvider());d.close();toast("Bienvenue !")}catch(er){$("#err").textContent=em(er)}};
+ $("#f").onsubmit=async ev=>{ev.preventDefault();const e=$("#e").value.trim(),p=$("#p")?.value||"",n=up?$("#n").value.trim():"",err=$("#err");err.textContent="";
+  if(!/^\S+@\S+\.\S+$/.test(e))return err.textContent="Entre une adresse e-mail valide.";
+  try{
+   if(rs){await sendPasswordResetEmail(auth,e);d.close();return toast("Lien envoyé. Vérifie ta boîte e-mail.")}
+   if(p.length<6)return err.textContent="Le mot de passe doit contenir au moins 6 caractères.";
+   if(up){if(!n)return err.textContent="Indique ton nom.";signing=true;const c=await createUserWithEmailAndPassword(auth,e,p);U=c.user;await updateProfile(U,{displayName:n});await setDoc(doc(db,"users",U.uid),{name:n,email:e,premiumUntil:0,best:{}});signing=false;await refresh()}
+   else await signInWithEmailAndPassword(auth,e,p);
+   d.close();toast("Bienvenue !")}
+  catch(er){err.textContent=em(er);if(signing){signing=false;if(auth.currentUser){U=auth.currentUser;refresh()}}}}}
 
-/* ---------- Réglages du site ---------- */
-async function loadSettings(){try{const s=await getDoc(doc(db,"settings","site"));if(s.exists())S={...DEF,...s.data()}}catch{toast("Impossible de lire les réglages. Vérifie les règles Firestore.")}render()}
-function applyTheme(){document.title=S.name+" — "+S.tagline;document.documentElement.style.setProperty("--ink",S.color);document.documentElement.style.setProperty("--acc",S.accent)}
-async function loadSujets(){try{SUJ=(await getDocs(collection(db,"sujets"))).docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.an||0)-(a.an||0)||a.title.localeCompare(b.title))}catch{SUJ=[]}}
+/* ---------- Navigation ---------- */
+function go(v){view=v;$("#site").hidden=v!=="site";$("#me").hidden=v!=="me";$("#adm").hidden=v!=="adm";if(v==="me")renderMe();if(v==="adm")admin();scrollTo(0,0)}
+document.querySelectorAll("header nav a").forEach(a=>a.addEventListener("click",()=>{if(view!=="site")go("site")}));
+$("#brand").addEventListener("click",()=>go("site"));
 
-/* ---------- Affichage public ---------- */
+/* ---------- Données ---------- */
+async function loadAll(){
+ try{const s=await getDoc(doc(db,"settings","site"));if(s.exists())S={...DEF,...s.data()}}catch(e){toast("Réglages illisibles : "+em(e))}
+ try{SUJ=(await getDocs(collection(db,"sujets"))).docs.map(d=>({id:d.id,...d.data()}))}catch{SUJ=[]}
+ try{QB=(await getDocs(collection(db,"quiz"))).docs.map(d=>({id:d.id,...d.data()}))}catch{QB=[]}
+ render()}
+
+/* ---------- Affichage ---------- */
 function render(){
- applyTheme();$("#brand").innerHTML=(S.logo?`<img src="${S.logo}" alt="">`:"")+esc(S.name);
- $("#hT").textContent=S.heroTitle;$("#hP").textContent=S.heroText;$("#hImg").innerHTML=S.hero?`<img src="${S.hero}" alt="">`:"";
- $("#authBtn").textContent=U?(P?.name||"Compte").split(" ")[0]+" · Déconnexion":"Connexion";$("#admBtn").hidden=!ADM;
- $("#foot").innerHTML=esc(S.footer||S.name+" — "+S.tagline)+(S.whatsapp?` · <a href="https://wa.me/${esc(S.whatsapp)}">WhatsApp</a>`:"");
- chips();list();plans();$("#pstat").textContent=premium()?"Ton accès Premium est actif jusqu’au "+new Date(P.premiumUntil).toLocaleDateString("fr-FR")+".":"Paiement par Mobile Money. Pas de carte bancaire nécessaire."}
-function chips(){const b=$("#chips");if(b.dataset.k===filter&&b.children.length)return[...b.querySelectorAll("button")].forEach(x=>x.setAttribute("aria-pressed",x.dataset.k===filter));b.innerHTML="";
- [["all","Tous"],...Object.entries(EX)].forEach(([k,l])=>{const c=document.createElement("button");c.className="chip";c.textContent=l;c.dataset.k=k;c.setAttribute("aria-pressed",k===filter);c.onclick=()=>{filter=k;chips();list()};b.appendChild(c)});
- const s=document.createElement("input");s.type="search";s.placeholder="Chercher une matière…";s.style.maxWidth="260px";s.oninput=()=>{term=s.value;list()};b.appendChild(s)}
-function list(){const L=SUJ.filter(x=>(filter==="all"||x.exam===filter)&&(x.mat+" "+x.title).toLowerCase().includes(term.toLowerCase()));
- $("#list").innerHTML=L.length?L.map(x=>{const o=can(x);return`<article class="card"><span class="badge ${x.free?"":"pro"}">${x.free?"Gratuit":"Premium"}</span><h3>${esc(x.title)}</h3><div class="meta">${EX[x.exam]||""} · ${esc(x.mat)} · ${x.an||""}</div><button class="btn ${o?"":"dark"}" data-id="${x.id}">${o?"Voir le corrigé":"Débloquer avec Premium"}</button></article>`}).join(""):'<div class="empty">Aucun sujet pour le moment. Reviens bientôt.</div>';
- $("#list").querySelectorAll("button").forEach(b=>b.onclick=()=>openSujet(b.dataset.id))}
+ document.title=S.name+" — "+S.tagline;document.documentElement.style.setProperty("--ink",S.color);document.documentElement.style.setProperty("--acc",S.accent);
+ $("#brand").innerHTML=(S.logo?`<img src="${S.logo}" alt="">`:"")+esc(S.name);
+ const a=$("#ann");a.hidden=!S.announce;a.textContent=S.announce;
+ $("#hT").textContent=S.heroTitle;$("#hP").textContent=S.heroText;
+ $("#hImg").innerHTML=S.hero?`<img class="himg" src="${S.hero}" alt="">`:'<div class="copie" aria-hidden="true">Résoudre : 2x + 3 = 11<br>2x = 11 − 3 = 8<br>x = 4 <span class="g">✓</span><br><span class="r">Bien posé. Vérifie ton résultat.</span></div>';
+ $("#stats").textContent=`${SUJ.length} sujet${SUJ.length>1?"s":""} corrigé${SUJ.length>1?"s":""} · ${mats().length} matière${mats().length>1?"s":""} · ${SUJ.filter(x=>x.free).length} gratuit${SUJ.filter(x=>x.free).length>1?"s":""}`;
+ $("#acct").innerHTML=(ADM?'<button class="btn sm dark" id="bAdm" style="border:2px solid var(--acc)">Admin</button>':"")+(U?'<button class="btn sm" id="bMe">Mon espace</button><button class="btn sm gw" id="bOut">Déconnexion</button>':'<button class="btn sm gw" id="bIn">Connexion</button><button class="btn sm" id="bUp">Créer un compte</button>');
+ const on=(i,f)=>{const e=$(i);if(e)e.onclick=f};on("#bAdm",()=>go(view==="adm"?"site":"adm"));on("#bMe",()=>go("me"));on("#bOut",()=>signOut(auth).then(()=>{go("site");toast("Tu es déconnecté.")}));on("#bIn",()=>openAuth("in"));on("#bUp",()=>openAuth("up"));
+ $("#exams").innerHTML=Object.entries(EX).map(([k,l])=>{const n=SUJ.filter(x=>x.exam===k).length;return`<button class="exam e-${k}" data-k="${k}"><b>${l}</b><span>${EXD[k]}</span><em>${n} sujet${n>1?"s":""}</em></button>`}).join("");
+ $("#exams").querySelectorAll("button").forEach(b=>b.onclick=()=>{F.exam=b.dataset.k;filters();list();$("#sujets").scrollIntoView()});
+ filters();list();plans();
+ const fq=String(S.faq||"").split("\n").map(l=>l.split("::")).filter(x=>x[1]);
+ $("#faqs").innerHTML=fq.map(([q,r])=>`<details><summary>${esc(q.trim())}</summary><p>${esc(r.trim())}</p></details>`).join("");$("#faq").hidden=!fq.length;
+ $("#foot").innerHTML=`<div><b class="disp" style="font-size:22px">${esc(S.name)}</b><p>${esc(S.footer||S.tagline)}</p></div><div><b>Navigation</b><a href="#sujets">Sujets</a><a href="#quiz">Quiz</a><a href="#tarifs">Tarifs</a></div><div><b>Contact</b>${S.whatsapp?`<a href="https://wa.me/${esc(S.whatsapp)}" target="_blank" rel="noopener">WhatsApp</a>`:""}<a href="#faq">Questions fréquentes</a></div>`;
+ $("#copy").textContent="© "+new Date().getFullYear()+" "+S.name+". Tous droits réservés.";
+ if(view==="me")renderMe()}
+function opts(sel,first,vals,cur){sel.innerHTML=`<option value="">${first}</option>`+vals.map(v=>`<option ${String(v)===cur?"selected":""}>${esc(v)}</option>`).join("")}
+function filters(){opts($("#fm"),"Toutes les matières",mats(),F.mat);opts($("#fa"),"Toutes les années",years(),F.an);$("#fp").value=F.acc;$("#fs").value=F.sort;if($("#q").value!==F.term)$("#q").value=F.term;
+ const b=$("#chips");b.innerHTML="";[["","Tous"],...Object.entries(EX)].forEach(([k,l])=>{const c=document.createElement("button");c.className="chip";c.textContent=l;c.setAttribute("aria-pressed",F.exam===k);c.onclick=()=>{F.exam=k;filters();list()};b.appendChild(c)})}
+$("#q").oninput=e=>{F.term=e.target.value;list()};$("#fm").onchange=e=>{F.mat=e.target.value;list()};$("#fa").onchange=e=>{F.an=e.target.value;list()};$("#fp").onchange=e=>{F.acc=e.target.value;list()};$("#fs").onchange=e=>{F.sort=e.target.value;list()};
+$("#hs").onsubmit=e=>{e.preventDefault();F.term=$("#hq").value.trim();filters();list();$("#sujets").scrollIntoView()};
+function list(){let L=SUJ.filter(x=>(!F.exam||x.exam===F.exam)&&(!F.mat||x.mat===F.mat)&&(!F.an||String(x.an)===F.an)&&(!F.acc||(F.acc==="free"?x.free:F.acc==="pro"?!x.free:FAV.has(x.id)))&&(x.title+" "+x.mat).toLowerCase().includes(F.term.toLowerCase()));
+ L.sort(F.sort==="az"?(a,b)=>a.title.localeCompare(b.title):F.sort==="free"?(a,b)=>(b.free-a.free)||(b.an-a.an):(a,b)=>(b.an||0)-(a.an||0)||a.title.localeCompare(b.title));
+ $("#cnt").textContent=L.length+" résultat"+(L.length>1?"s":"");
+ $("#list").innerHTML=L.length?L.map(x=>{const o=can(x),fv=FAV.has(x.id);return`<article class="fiche e-${x.exam}"><div class="top"><span>${EX[x.exam]||""} · ${esc(x.mat)} · ${x.an||""}</span><button class="fav" data-f="${x.id}" aria-pressed="${fv}" aria-label="Favori">${fv?"★":"☆"}</button></div><h3>${esc(x.title)}</h3><div class="tags">${x.free?'<i class="ok">Gratuit</i>':AC.has(x.id)?'<i class="ok">Acheté</i>':'<i class="pro">Premium</i>'}${x.hasPdf?"<i>PDF</i>":""}${x.hasVideo?"<i>Vidéo</i>":""}${DONE[x.id]?'<i class="ok">Terminé</i>':""}</div><button class="btn ${o?"":"dark"}" data-id="${x.id}">${o?"Ouvrir le sujet":"Débloquer"}</button></article>`}).join(""):'<div class="empty">Aucun sujet ne correspond à ta recherche. Retire un filtre ou essaie une autre matière.</div>';
+ $("#list").querySelectorAll("[data-id]").forEach(b=>b.onclick=()=>openSujet(b.dataset.id));
+ $("#list").querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>{toggleFav(b.dataset.f);list()})}
+function toggleFav(id){FAV.has(id)?FAV.delete(id):FAV.add(id);LS.set("fav",[...FAV])}
 async function openSujet(id){const x=SUJ.find(s=>s.id===id);
- if(!can(x)){if(!U){toast("Crée un compte pour débloquer ce sujet.");return openAuth(true)}return buyDlg({kind:"sujet",id:x.id,label:x.title,price:x.price,link:x.payLink,days:0},true)}
- const d=$("#dlg");d.innerHTML=`<h3>${esc(x.title)}</h3><p class="meta">${EX[x.exam]||""} · ${esc(x.mat)} · ${x.an||""}</p><div id="sc">Chargement…</div><div class="row"><button class="btn" id="cl">Fermer</button></div>`;d.showModal();$("#cl").onclick=()=>d.close();
+ if(!can(x)){if(!U){toast("Crée un compte pour débloquer ce sujet.");return openAuth("up")}return buyDlg({kind:"sujet",id:x.id,label:x.title,price:x.price,link:x.payLink,days:0},true)}
+ const d=$("#dlg");d.innerHTML=`<h3>${esc(x.title)}</h3><p class="meta">${EX[x.exam]||""} · ${esc(x.mat)} · ${x.an||""}</p><div id="sc">Chargement…</div>
+ <div class="row"><button class="btn ghost sm" id="sh">Partager</button><button class="btn ghost sm" id="fv"></button><button class="btn ghost sm" id="dn"></button><button class="btn sm" id="cl">Fermer</button></div>`;
+ d.showModal();const fv=()=>{$("#fv").textContent=FAV.has(id)?"★ Favori":"☆ Favori";$("#dn").textContent=DONE[id]?"✓ Terminé":"Marquer terminé"};fv();
+ $("#cl").onclick=()=>d.close();$("#fv").onclick=()=>{toggleFav(id);fv();list()};$("#dn").onclick=()=>{DONE[id]?delete DONE[id]:DONE[id]=1;LS.set("done",DONE);fv();list()};
+ $("#sh").onclick=()=>navigator.share?navigator.share({title:x.title,url:location.href}).catch(()=>{}):open("https://wa.me/?text="+encodeURIComponent(x.title+" "+location.href));
  try{const c=(await getDoc(doc(db,"sujetsContent",id))).data()||{};let h="";
   if(c.imageId)h+=`<img src="${await mediaUrl(c.imageId)}" alt="" style="max-width:100%;border-radius:8px">`;
   if(c.corrige)h+=`<div class="corr">${esc(c.corrige)}</div>`;
@@ -170,19 +277,24 @@ async function openSujet(id){const x=SUJ.find(s=>s.id===id);
 const QZ={bepc:[["Racine carrée de 144 ?",["10","12","14","16"],1],["Formule de l’eau ?",["CO2","O2","H2O","NaCl"],2],["Pluriel de « cheval » ?",["chevals","chevaux","chevaus","chevales"],1],["7 × 8 = ?",["54","56","58","64"],1]],
  bac:[["Dérivée de x² ?",["x","2x","x²","2"],1],["Auteur des « Misérables » ?",["Victor Hugo","Émile Zola","Molière","Voltaire"],0],["Unité de force ?",["Joule","Watt","Newton","Pascal"],2],["Limite de 1/x en +∞ ?",["1","+∞","0","−∞"],2]],
  concours:[["UEMOA signifie ?",["Union économique et monétaire ouest-africaine","Union européenne des marchés africains","Union des États du Maghreb","Union économique mondiale"],0],["15 % de 200 ?",["15","20","30","45"],2],["Suite : 2, 4, 8, 16, … ?",["24","30","32","36"],2],["Siège de l’Union africaine ?",["Dakar","Addis-Abeba","Nairobi","Abuja"],1]]};
-Object.entries(EX).forEach(([k,l])=>{const b=document.createElement("button");b.className="chip";b.textContent=l;b.onclick=()=>{qz={k,i:0,s:0,d:false};quiz()};$("#qc").appendChild(b)});
-function quiz(){const Q=QZ[qz.k],box=$("#qb");
- if(qz.i>=Q.length){const best=P?.best?.[qz.k]??0;if(U&&P&&qz.s>best){P.best={...(P.best||{}),[qz.k]:qz.s};setDoc(doc(db,"users",U.uid),{best:P.best},{merge:true}).catch(()=>{})}
-  box.innerHTML=`<h3>Score : ${qz.s} / ${Q.length}</h3><p>${qz.s===Q.length?"Parfait !":qz.s>=2?"Bon début. Refais le quiz pour viser le sans-faute.":"Relis les corrigés, puis réessaie."}</p><button class="btn" id="ag">Recommencer</button>`;$("#ag").onclick=()=>{qz={k:qz.k,i:0,s:0,d:false};quiz()};return}
- const[q,o,a]=Q[qz.i];box.innerHTML=`<div class="meta">Question ${qz.i+1} sur ${Q.length}</div><div class="q">${esc(q)}</div><div id="op"></div><div class="row"><button class="btn" id="nx" disabled>Suivant</button></div>`;
- o.forEach((t,j)=>{const b=document.createElement("button");b.className="opt";b.textContent=t;b.onclick=()=>{if(qz.d)return;qz.d=true;if(j===a)qz.s++;[...$("#op").children].forEach((c,m)=>{if(m===a)c.classList.add("good");else if(m===j)c.classList.add("bad");c.disabled=true});$("#nx").disabled=false};$("#op").appendChild(b)});
+Object.entries(EX).forEach(([k,l])=>{const b=document.createElement("button");b.className="chip";b.textContent=l;b.onclick=()=>{const own=QB.filter(q=>q.exam===k).map(q=>[q.q,q.o,q.a]),bank=own.length?own:QZ[k];qz={k,Q:[...bank].sort(()=>Math.random()-.5).slice(0,10),i:0,s:0,d:false};quiz()};$("#qc").appendChild(b)});
+function quiz(){const box=$("#qb"),Q=qz.Q;
+ if(qz.i>=Q.length){const best=P?.best?.[qz.k]??0,pc=Math.round(qz.s/Q.length*100);
+  if(U&&P&&pc>best){P.best={...(P.best||{}),[qz.k]:pc};setDoc(doc(db,"users",U.uid),{best:P.best},{merge:true}).catch(()=>{})}
+  box.innerHTML=`<h3>Score : ${qz.s} / ${Q.length} (${pc} %)</h3><p>${pc===100?"Sans faute. Passe aux sujets corrigés.":pc>=50?"Bon début. Refais le quiz pour viser le sans-faute.":"Relis les corrigés de la matière, puis réessaie."}</p>${U?`<p class="meta">Meilleur score ${EX[qz.k]} : ${Math.max(best,pc)} %</p>`:'<p class="meta">Connecte-toi pour enregistrer ton meilleur score.</p>'}<button class="btn" id="ag">Recommencer</button>`;
+  $("#ag").onclick=()=>{qz={...qz,Q:[...qz.Q].sort(()=>Math.random()-.5),i:0,s:0,d:false};quiz()};return}
+ const[q,o,a]=Q[qz.i];box.innerHTML=`<div class="prog"><i style="width:${qz.i/Q.length*100}%"></i></div><div class="meta" style="margin-top:10px">Question ${qz.i+1} sur ${Q.length}</div><div class="q">${esc(q)}</div><div id="op"></div><div class="row"><button class="btn" id="nx" disabled>Suivant</button></div>`;
+ o.forEach((t,j)=>{const b=document.createElement("button");b.className="opt";b.textContent=t;b.onclick=()=>{if(qz.d)return;qz.d=true;if(j===a)qz.s++;[...$("#op").children].forEach((c,m)=>{if(m===a)c.classList.add("good");else if(m===j)c.classList.add("bad");c.disabled=true});$("#nx").disabled=false;$("#nx").textContent=qz.i===Q.length-1?"Voir mon score":"Suivant"};$("#op").appendChild(b)});
  $("#nx").onclick=()=>{qz.i++;qz.d=false;quiz()}}
 
-/* ---------- Tarifs et paiement KkiaPay ---------- */
-const PL=()=>[{id:"month",name:"Mensuel",price:+S.priceMonth,link:S.linkMonth,days:30,unit:"/ mois",perks:["Tous les sujets corrigés","Nouveaux sujets chaque mois"],best:1},{id:"pack",name:"Pack examen",price:+S.pricePack,link:S.linkPack,days:120,unit:"/ 4 mois",perks:["Tout le contenu premium","Valable jusqu’à l’examen"]}];
-function plans(){$("#plans").innerHTML=PL().map(p=>`<div class="plan ${p.best?"best":""}"><h3>${p.name}</h3><div class="price">${fcfa(p.price)} <small class="meta" style="font:600 15px sans-serif">${p.unit}</small></div><ul>${p.perks.map(x=>`<li>${x}</li>`).join("")}</ul><button class="btn ${p.best?"":"dark"}" data-p="${p.id}">Payer avec Mobile Money</button></div>`).join("");
- $("#plans").querySelectorAll("button").forEach(b=>b.onclick=()=>pay(b.dataset.p))}
-function pay(id){if(!U){toast("Crée un compte avant de payer.");return openAuth(true)}const p=PL().find(x=>x.id===id);buyDlg({kind:"plan",id,label:"Abonnement "+p.name,price:p.price,link:p.link,days:p.days})}
+/* ---------- Tarifs et paiement par liens ---------- */
+const PL=()=>[{id:"free",name:"Gratuit",price:0,unit:"",perks:["Sujets gratuits","Quiz illimités","Favoris et suivi"]},
+ {id:"month",name:"Mensuel",price:+S.priceMonth,link:S.linkMonth,days:30,unit:"/ mois",perks:["Tous les sujets corrigés","PDF et vidéos","Nouveaux sujets chaque mois"],best:1},
+ {id:"pack",name:"Pack examen",price:+S.pricePack,link:S.linkPack,days:120,unit:"/ 4 mois",perks:["Tout le contenu premium","Valable jusqu’à l’examen","Économie par rapport au mensuel"]}];
+function plans(){$("#pstat").textContent=premium()?"Ton accès Premium est actif jusqu’au "+fdate(P.premiumUntil)+".":"Paiement par Mobile Money. Les sujets premium peuvent aussi s’acheter à l’unité.";
+ $("#plans").innerHTML=PL().map(p=>`<div class="plan ${p.best?"best":""}"><h3>${p.name}</h3><div class="price">${p.price?fcfa(p.price):"0 FCFA"} <small>${p.unit}</small></div><ul>${p.perks.map(x=>`<li>${x}</li>`).join("")}</ul><button class="btn ${p.best?"":"dark"}" data-p="${p.id}">${p.id==="free"?(U?"Ton plan actuel":"Créer un compte"):"Payer avec Mobile Money"}</button></div>`).join("");
+ $("#plans").querySelectorAll("button").forEach(b=>b.onclick=()=>b.dataset.p==="free"?(U?null:openAuth("up")):pay(b.dataset.p))}
+function pay(id){if(!U){toast("Crée un compte avant de payer.");return openAuth("up")}const p=PL().find(x=>x.id===id);buyDlg({kind:"plan",id,label:"Abonnement "+p.name,price:p.price,link:p.link,days:p.days})}
 function buyDlg(it,sub){const d=$("#dlg");
  d.innerHTML=`<h3>${esc(it.label)}</h3>${it.price?`<p>Montant : <b>${fcfa(it.price)}</b></p>`:""}
  ${it.link?`<p><a class="btn" href="${esc(it.link)}" target="_blank" rel="noopener">1. Payer avec Mobile Money</a></p>`:`<p class="err">Le lien de paiement n’est pas encore disponible.${S.whatsapp?` Contacte-nous sur <a href="https://wa.me/${esc(S.whatsapp)}">WhatsApp</a>.`:""}</p>`}
@@ -192,22 +304,39 @@ function buyDlg(it,sub){const d=$("#dlg");
  $("#ok").onclick=async()=>{const r=$("#rf").value.trim();if(!r)return $("#err").textContent="Indique la référence du paiement.";
   try{await addDoc(collection(db,"payments"),{uid:U.uid,name:P?.name||"",email:U.email,kind:it.kind,itemId:it.id,label:it.label,amount:+it.price||0,days:it.days||0,ref:r,status:"pending",createdAt:serverTimestamp()});d.close();toast("Demande envoyée. Ton accès sera activé après vérification.")}catch(er){$("#err").textContent=em(er)}}}
 
+/* ---------- Mon espace ---------- */
+const ST={pending:"En attente",approved:"Validé",refused:"Refusé"};
+async function renderMe(){const b=$("#mebox");if(!U){go("site");return openAuth("in")}
+ let pays=[];try{pays=(await getDocs(query(collection(db,"payments"),where("uid","==",U.uid)))).docs.map(d=>d.data()).sort((a,c)=>(c.createdAt?.seconds||0)-(a.createdAt?.seconds||0))}catch{}
+ const days=premium()?Math.ceil((P.premiumUntil-Date.now())/864e5):0,fav=SUJ.filter(x=>FAV.has(x.id));
+ b.innerHTML=`<h2>Bonjour, ${esc((P?.name||"").split(" ")[0])}</h2><p class="meta">${esc(U.email)}</p>
+ <div class="kpis"><div><b>${premium()?days+" j":"Gratuit"}</b><span>${premium()?"Premium jusqu’au "+fdate(P.premiumUntil):"Abonnement"}</span></div><div><b>${Object.keys(DONE).filter(k=>SUJ.some(s=>s.id===k)).length}/${SUJ.length}</b><span>Sujets terminés</span></div><div><b>${fav.length}</b><span>Favoris</span></div><div><b>${AC.size}</b><span>Sujets achetés</span></div></div>
+ <h3>Meilleurs scores aux quiz</h3><p class="meta">${Object.entries(EX).map(([k,l])=>l+" : "+(P?.best?.[k]!=null?P.best[k]+" %":"pas encore joué")).join(" · ")}</p>
+ <h3 style="margin-top:26px">Mes favoris</h3><div class="grid" style="margin-top:12px">${fav.map(x=>`<div class="row2"><b>${esc(x.title)}</b><button class="btn sm" data-o="${x.id}">Ouvrir</button></div>`).join("")||'<div class="empty">Aucun favori. Touche l’étoile d’un sujet pour le retrouver ici.</div>'}</div>
+ <h3 style="margin-top:26px">Mes paiements</h3><div style="margin-top:12px">${pays.map(p=>`<div class="row2"><div><b>${esc(p.label)}</b><div class="meta">${fcfa(p.amount)} · Réf. ${esc(p.ref)}</div></div><span class="st ${p.status}">${ST[p.status]||p.status}</span></div>`).join("")||'<div class="empty">Aucun paiement pour le moment.</div>'}</div>
+ <p style="margin-top:20px"><button class="btn" id="mt">Voir les abonnements</button></p>`;
+ b.querySelectorAll("[data-o]").forEach(x=>x.onclick=()=>openSujet(x.dataset.o));$("#mt").onclick=()=>{go("site");$("#tarifs").scrollIntoView()}}
+
 /* ---------- Espace admin ---------- */
-function showAdmin(v){$("#site").hidden=v;$("#adm").hidden=!v;if(v)admin()}
-$("#admBtn").onclick=()=>showAdmin($("#adm").hidden);
-function admin(){const t=$("#tabs");t.innerHTML="";[["site","Site"],["sujets","Sujets"],["pay","Paiements"]].forEach(([k,l])=>{const b=document.createElement("button");b.className="chip";b.textContent=l;b.setAttribute("aria-pressed",tab===k);b.onclick=()=>{tab=k;admin()};t.appendChild(b)});
- const box=$("#abox");({site:admSite,sujets:admSujets,pay:admPay})[tab](box)}
-const FS=[["name","Nom du site"],["tagline","Slogan"],["heroTitle","Titre d’accueil","full"],["heroText","Texte d’accueil","area"],["whatsapp","WhatsApp (ex : 22997000000)"],["linkMonth","Lien de paiement — abonnement mensuel","full"],["linkPack","Lien de paiement — pack examen","full"],["priceMonth","Prix mensuel (FCFA)","number"],["pricePack","Prix pack examen (FCFA)","number"],["footer","Texte du bas de page","full"]];
-function admSite(box){box.innerHTML=`<form class="fm" id="sf"><h3>Identité et réglages</h3>${FS.map(([k,l,t])=>`<label class="${t==="full"||t==="area"?"full":""}">${l}${t==="area"?`<textarea name="${k}" rows="3">${esc(S[k])}</textarea>`:`<input name="${k}" type="${t==="number"?"number":"text"}" value="${esc(S[k])}">`}</label>`).join("")}
+const TABS=[["dash","Tableau de bord"],["site","Site"],["sujets","Sujets"],["quiz","Quiz"],["pay","Paiements"],["mem","Membres"]];
+function admin(){const t=$("#tabs");t.innerHTML="";TABS.forEach(([k,l])=>{const b=document.createElement("button");b.className="chip";b.textContent=l;b.setAttribute("aria-pressed",tab===k);b.onclick=()=>{tab=k;admin()};t.appendChild(b)});
+ ({dash:admDash,site:admSite,sujets:admSujets,quiz:admQuiz,pay:admPay,mem:admMem})[tab]($("#abox"))}
+async function admDash(box){box.textContent="Chargement…";
+ try{const[us,ps]=await Promise.all([getDocs(collection(db,"users")),getDocs(collection(db,"payments"))]),u=us.docs.map(d=>d.data()),p=ps.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+  box.innerHTML=`<div class="kpis"><div><b>${u.length}</b><span>Membres</span></div><div><b>${u.filter(x=>x.premiumUntil>Date.now()).length}</b><span>Abonnés actifs</span></div><div><b>${p.filter(x=>x.status==="pending").length}</b><span>Paiements à valider</span></div><div><b>${fcfa(p.filter(x=>x.status==="approved").reduce((a,x)=>a+(+x.amount||0),0))}</b><span>Encaissé (validé)</span></div><div><b>${SUJ.length}</b><span>Sujets publiés</span></div></div>
+  <h3>Derniers paiements</h3><div style="margin-top:12px">${p.slice(0,8).map(x=>`<div class="row2"><div><b>${esc(x.name)}</b> · ${esc(x.label)}<div class="meta">${fcfa(x.amount)} · Réf. ${esc(x.ref)}</div></div><span class="st ${x.status}">${ST[x.status]||x.status}</span></div>`).join("")||'<div class="empty">Aucun paiement.</div>'}</div>`
+ }catch(e){box.textContent=em(e)}}
+const FS=[["name","Nom du site"],["tagline","Slogan"],["announce","Bandeau d’annonce (vide = masqué)","full"],["heroTitle","Titre d’accueil","full"],["heroText","Texte d’accueil","area"],["whatsapp","WhatsApp (ex : 22997000000)"],["priceMonth","Prix mensuel (FCFA)","number"],["linkMonth","Lien de paiement — abonnement mensuel","full"],["pricePack","Prix pack examen (FCFA)","number"],["linkPack","Lien de paiement — pack examen","full"],["footer","Texte du bas de page","full"],["faq","FAQ : une ligne par question, au format  Question :: Réponse","area"]];
+function admSite(box){box.innerHTML=`<form class="fm" id="sf"><h3>Identité et réglages</h3>${FS.map(([k,l,t])=>`<label class="${t==="full"||t==="area"?"full":""}">${l}${t==="area"?`<textarea name="${k}" rows="4">${esc(S[k])}</textarea>`:`<input name="${k}" type="${t==="number"?"number":"text"}" value="${esc(S[k])}">`}</label>`).join("")}
  <label>Couleur principale<input type="color" name="color" value="${S.color}"></label><label>Couleur d’accent<input type="color" name="accent" value="${S.accent}"></label>
  <label>Logo (image)<input type="file" name="logo" accept="image/*"></label><label>Photo d’accueil (image)<input type="file" name="hero" accept="image/*"></label>
  <div class="row"><button class="btn red" type="button" id="rm">Retirer logo et photo</button><button class="btn">Enregistrer</button></div></form>`;
  $("#rm").onclick=async()=>{S={...S,logo:"",hero:""};await setDoc(doc(db,"settings","site"),S);render();toast("Logo et photo retirés.")};
- $("#sf").onsubmit=async e=>{e.preventDefault();const fd=new FormData(e.target),o={...S};FS.forEach(([k,,t])=>o[k]=t==="number"?+fd.get(k):fd.get(k).trim());
-  o.color=fd.get("color");o.accent=fd.get("accent");
-  try{for(const k of["linkMonth","linkPack"])if(o[k]&&!/^https:\/\//i.test(o[k]))throw new Error("Les liens de paiement doivent commencer par https://");const l=fd.get("logo"),h=fd.get("hero");if(l.size)o.logo=await shrink(l,360,.85);if(h.size)o.hero=await shrink(h,900,.72);
+ $("#sf").onsubmit=async e=>{e.preventDefault();const fd=new FormData(e.target),o={...S};FS.forEach(([k,,t])=>o[k]=t==="number"?+fd.get(k):fd.get(k).trim());o.color=fd.get("color");o.accent=fd.get("accent");
+  try{for(const k of["linkMonth","linkPack"])if(o[k]&&!/^https:\/\//i.test(o[k]))throw new Error("Les liens de paiement doivent commencer par https://");
+   const l=fd.get("logo"),h=fd.get("hero");if(l.size)o.logo=await shrink(l,360,.85);if(h.size)o.hero=await shrink(h,900,.72);
    await setDoc(doc(db,"settings","site"),o);S=o;render();toast("Réglages enregistrés.")}catch(er){toast(em(er))}}}
-async function admSujets(box){await loadSujets();
+async function admSujets(box){
  box.innerHTML=`<form class="fm" id="sf"><h3>${ED?"Modifier le sujet":"Nouveau sujet"}</h3>
  <label>Titre<input name="title" required></label><label>Examen<select name="exam">${Object.entries(EX).map(([k,v])=>`<option value="${k}">${v}</option>`).join("")}</select></label>
  <label>Matière<input name="mat" required></label><label>Année<input name="an" type="number" value="${new Date().getFullYear()}"></label>
@@ -217,32 +346,53 @@ async function admSujets(box){await loadSujets();
  <label>Photo / image<input type="file" name="image" accept="image/*"></label><label>PDF (5 Mo max)<input type="file" name="pdf" accept="application/pdf"></label>
  <label class="full">Vidéo YouTube (lien)<input name="video" placeholder="https://youtu.be/…"></label>
  <div class="row">${ED?'<button type="button" class="btn ghost" id="cn">Annuler</button>':""}<button class="btn" id="sv">Enregistrer</button></div></form>
- ${SUJ.map(x=>`<div class="row2"><div><b>${esc(x.title)}</b><div class="meta">${EX[x.exam]||""} · ${esc(x.mat)} · ${x.an||""} · ${x.free?"Gratuit":"Premium"}</div></div><div><button class="btn sm dark" data-e="${x.id}">Modifier</button> <button class="btn sm red" data-d="${x.id}">Supprimer</button></div></div>`).join("")||'<div class="empty">Aucun sujet. Ajoute le premier ci-dessus.</div>'}`;
+ ${[...SUJ].sort((a,b)=>(b.an||0)-(a.an||0)).map(x=>`<div class="row2"><div><b>${esc(x.title)}</b><div class="meta">${EX[x.exam]||""} · ${esc(x.mat)} · ${x.an||""} · ${x.free?"Gratuit":"Premium"}</div></div><div><button class="btn sm dark" data-e="${x.id}">Modifier</button> <button class="btn sm red" data-d="${x.id}">Supprimer</button></div></div>`).join("")||'<div class="empty">Aucun sujet. Ajoute le premier ci-dessus.</div>'}`;
  const f=$("#sf");
  if(ED){const x=SUJ.find(s=>s.id===ED.id);["title","exam","mat","an","price","payLink"].forEach(k=>f.elements[k].value=x[k]??"");f.elements.free.checked=!!x.free;f.elements.corrige.value=ED.c.corrige||"";f.elements.video.value=ED.c.video||"";$("#cn").onclick=()=>{ED=null;admSujets(box)}}
  box.querySelectorAll("[data-e]").forEach(b=>b.onclick=async()=>{ED={id:b.dataset.e,c:(await getDoc(doc(db,"sujetsContent",b.dataset.e))).data()||{}};admSujets(box);scrollTo(0,0)});
  box.querySelectorAll("[data-d]").forEach(b=>b.onclick=async()=>{if(!confirm("Supprimer ce sujet et ses fichiers ?"))return;const id=b.dataset.d,c=(await getDoc(doc(db,"sujetsContent",id))).data()||{};
-  await mediaOp(c.imageId);await mediaOp(c.pdfId);await deleteDoc(doc(db,"sujetsContent",id));await deleteDoc(doc(db,"sujets",id));await loadSujets();list();admSujets(box)});
+  await mediaOp(c.imageId);await mediaOp(c.pdfId);await deleteDoc(doc(db,"sujetsContent",id));await deleteDoc(doc(db,"sujets",id));SUJ=SUJ.filter(s=>s.id!==id);render();admSujets(box)});
  f.onsubmit=async e=>{e.preventDefault();const fd=new FormData(f),btn=$("#sv");btn.disabled=true;btn.textContent="Envoi en cours…";
-  try{const pl=fd.get("payLink").trim();if(pl&&!/^https:\/\//i.test(pl))throw new Error("Le lien de paiement doit commencer par https://");const free=fd.has("free"),id=ED?.id||doc(collection(db,"sujets")).id,c={...(ED?.c||{})};
+  try{const pl=fd.get("payLink").trim();if(pl&&!/^https:\/\//i.test(pl))throw new Error("Le lien de paiement doit commencer par https://");
+   const free=fd.has("free"),id=ED?.id||doc(collection(db,"sujets")).id,c={...(ED?.c||{})};
    if(ED&&!!ED.c.free!==free){await mediaOp(c.imageId,free);await mediaOp(c.pdfId,free)}
    const im=fd.get("image"),pd=fd.get("pdf");
    if(im.size){await mediaOp(c.imageId);c.imageId=await upload(im,free,1100,id)}
    if(pd.size){await mediaOp(c.pdfId);c.pdfId=await upload(pd,free,0,id)}
    c.free=free;c.corrige=fd.get("corrige");c.video=fd.get("video").trim();
-   await setDoc(doc(db,"sujetsContent",id),c);await setDoc(doc(db,"sujets",id),{title:fd.get("title").trim(),exam:fd.get("exam"),mat:fd.get("mat").trim(),an:+fd.get("an")||0,free,price:+fd.get("price")||0,payLink:pl});
-   ED=null;await loadSujets();list();toast("Sujet enregistré.");admSujets(box)}
+   const m={title:fd.get("title").trim(),exam:fd.get("exam"),mat:fd.get("mat").trim(),an:+fd.get("an")||0,free,price:+fd.get("price")||0,payLink:pl,hasPdf:!!c.pdfId,hasVideo:!!c.video};
+   await setDoc(doc(db,"sujetsContent",id),c);await setDoc(doc(db,"sujets",id),m);
+   SUJ=[...SUJ.filter(s=>s.id!==id),{id,...m}];ED=null;render();toast("Sujet enregistré.");admSujets(box)}
   catch(er){toast(em(er));btn.disabled=false;btn.textContent="Enregistrer"}}}
+function admQuiz(box){
+ box.innerHTML=`<form class="fm" id="qf"><h3>Nouvelle question</h3><label>Examen<select name="exam">${Object.entries(EX).map(([k,v])=>`<option value="${k}">${v}</option>`).join("")}</select></label><label>Bonne réponse<select name="a"><option value="0">Réponse 1</option><option value="1">Réponse 2</option><option value="2">Réponse 3</option><option value="3">Réponse 4</option></select></label>
+ <label class="full">Question<input name="q" required></label>${[1,2,3,4].map(i=>`<label>Réponse ${i}<input name="o${i}" required></label>`).join("")}<div class="row"><button class="btn">Ajouter</button></div></form>
+ <p class="meta">Tant qu’un examen n’a aucune question ici, le quiz utilise des questions d’exemple.</p>
+ ${QB.map(x=>`<div class="row2"><div><b>${esc(x.q)}</b><div class="meta">${EX[x.exam]} · Bonne réponse : ${esc(x.o[x.a])}</div></div><button class="btn sm red" data-d="${x.id}">Supprimer</button></div>`).join("")||'<div class="empty">Aucune question personnalisée.</div>'}`;
+ $("#qf").onsubmit=async e=>{e.preventDefault();const fd=new FormData(e.target),q={exam:fd.get("exam"),q:fd.get("q").trim(),o:[1,2,3,4].map(i=>fd.get("o"+i).trim()),a:+fd.get("a")};
+  try{const r=await addDoc(collection(db,"quiz"),q);QB.push({id:r.id,...q});toast("Question ajoutée.");admQuiz(box)}catch(er){toast(em(er))}};
+ box.querySelectorAll("[data-d]").forEach(b=>b.onclick=async()=>{await deleteDoc(doc(db,"quiz",b.dataset.d));QB=QB.filter(x=>x.id!==b.dataset.d);admQuiz(box)})}
 async function admPay(box){box.innerHTML="Chargement…";
- try{const L=(await getDocs(query(collection(db,"payments"),where("status","==","pending")))).docs;
-  box.innerHTML=`<p class="sub">Vérifie chaque référence dans ton compte de paiement avant de valider.</p>`+(L.map(d=>{const x=d.data();return`<div class="row2"><div><b>${esc(x.name)}</b> · ${esc(x.email)}<div class="meta">${esc(x.label)} · ${fcfa(x.amount)} · Réf. ${esc(x.ref)}</div></div><div><button class="btn sm" data-ok="${d.id}">Valider</button> <button class="btn sm red" data-no="${d.id}">Refuser</button></div></div>`}).join("")||'<div class="empty">Aucun paiement en attente.</div>');
-  box.querySelectorAll("[data-ok]").forEach(b=>b.onclick=async()=>{const d=L.find(z=>z.id===b.dataset.ok),x=d.data();try{if(x.kind==="sujet")await setDoc(doc(db,"access",x.uid+"_"+x.itemId),{uid:x.uid,sid:x.itemId});else{const u=await getDoc(doc(db,"users",x.uid)),cur=Math.max(Date.now(),u.data()?.premiumUntil||0);
-   await setDoc(u.ref,{premiumUntil:cur+x.days*864e5},{merge:true})}await setDoc(d.ref,{status:"approved"},{merge:true});toast("Abonnement activé.");admPay(box)}catch(er){toast(em(er))}});
+ try{const L=(await getDocs(collection(db,"payments"))).docs.sort((a,b)=>(b.data().createdAt?.seconds||0)-(a.data().createdAt?.seconds||0)),pen=L.filter(d=>d.data().status==="pending"),old=L.filter(d=>d.data().status!=="pending").slice(0,20);
+  const row=(d,a)=>{const x=d.data();return`<div class="row2"><div><b>${esc(x.name)}</b> · ${esc(x.email)}<div class="meta">${esc(x.label)} · ${fcfa(x.amount)} · Réf. ${esc(x.ref)}</div></div>${a?`<div><button class="btn sm" data-ok="${d.id}">Valider</button> <button class="btn sm red" data-no="${d.id}">Refuser</button></div>`:`<span class="st ${x.status}">${ST[x.status]}</span>`}</div>`};
+  box.innerHTML=`<p class="sub">Vérifie chaque référence dans ton compte de paiement avant de valider.</p><h3>À valider (${pen.length})</h3><div style="margin:12px 0 26px">${pen.map(d=>row(d,1)).join("")||'<div class="empty">Aucun paiement en attente.</div>'}</div><h3>Historique</h3><div style="margin-top:12px">${old.map(d=>row(d,0)).join("")||'<div class="empty">Rien pour le moment.</div>'}</div>`;
+  box.querySelectorAll("[data-ok]").forEach(b=>b.onclick=async()=>{const d=L.find(z=>z.id===b.dataset.ok),x=d.data();try{
+   if(x.kind==="sujet")await setDoc(doc(db,"access",x.uid+"_"+x.itemId),{uid:x.uid,sid:x.itemId});
+   else{const u=await getDoc(doc(db,"users",x.uid)),cur=Math.max(Date.now(),u.data()?.premiumUntil||0);await setDoc(u.ref,{premiumUntil:cur+x.days*864e5},{merge:true})}
+   await setDoc(d.ref,{status:"approved"},{merge:true});toast("Accès activé.");admPay(box)}catch(er){toast(em(er))}});
   box.querySelectorAll("[data-no]").forEach(b=>b.onclick=async()=>{await setDoc(doc(db,"payments",b.dataset.no),{status:"refused"},{merge:true});admPay(box)})
+ }catch(er){box.textContent=em(er)}}
+async function admMem(box){box.innerHTML="Chargement…";
+ try{const L=(await getDocs(collection(db,"users"))).docs;
+  box.innerHTML=`<input id="ms" type="search" placeholder="Chercher un membre (nom ou e-mail)…" style="margin-bottom:14px"><div id="ml"></div>`;
+  const show=()=>{const t=$("#ms").value.toLowerCase();$("#ml").innerHTML=L.filter(d=>(d.data().name+" "+d.data().email).toLowerCase().includes(t)).map(d=>{const x=d.data(),on=x.premiumUntil>Date.now();return`<div class="row2"><div><b>${esc(x.name)}</b> · ${esc(x.email)}<div class="meta">${on?"Premium jusqu’au "+fdate(x.premiumUntil):"Gratuit"}</div></div><div><button class="btn sm" data-a="${d.id}" data-n="30">+30 j</button> <button class="btn sm dark" data-a="${d.id}" data-n="120">+120 j</button> ${on?`<button class="btn sm red" data-a="${d.id}" data-n="0">Retirer</button>`:""}</div></div>`}).join("")||'<div class="empty">Aucun membre.</div>';
+   $("#ml").querySelectorAll("[data-a]").forEach(b=>b.onclick=async()=>{const d=L.find(z=>z.id===b.dataset.a),n=+b.dataset.n,cur=Math.max(Date.now(),d.data().premiumUntil||0),v=n?cur+n*864e5:0;
+    try{await setDoc(d.ref,{premiumUntil:v},{merge:true});d.data().premiumUntil=v;toast("Abonnement mis à jour.");admMem(box)}catch(er){toast(em(er))}})};
+  $("#ms").oninput=show;show()
  }catch(er){box.textContent=em(er)}}
 
 $("#dlg").addEventListener("click",e=>{if(e.target===e.currentTarget)e.currentTarget.close()});
-render();loadSettings();loadSujets().then(list);
+render();loadAll();
 </script>
 </body>
 </html>
