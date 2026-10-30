@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Examia</title>
+<link rel="manifest"><meta name="theme-color" content="#0f1b3d"><link rel="icon" href="data:,"><link rel="apple-touch-icon" href="data:,">
 <meta name="description" content="Annales corrigées, quiz et cours pour le BEPC, le BAC et les concours.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
@@ -48,6 +49,8 @@ input,select,textarea{width:100%;padding:11px 13px;border:2px solid var(--line);
 input[type=checkbox]{width:auto}input[type=color]{padding:2px;height:44px}
 /* Examens */
 .exams{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.grp{margin:26px 0 12px;font-size:18px;color:var(--muted)}.grp:first-child{margin-top:0}
+.cd{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.cdb{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:4px 12px;font-size:14px;color:#fff}.cdb b{color:var(--acc)}
 .exam{text-align:left;background:var(--card);border:2px solid var(--line);border-left:8px solid var(--c);border-radius:6px 14px 14px 6px;padding:20px;cursor:pointer;color:var(--tx);display:flex;flex-direction:column;gap:4px}
 .exam b{font:800 26px "Bricolage Grotesque",sans-serif;color:var(--c)}.exam span{color:var(--muted);font-size:15px}.exam em{font-style:normal;font-weight:700;margin-top:6px}
 .e-bepc{--c:var(--c-bepc)}.e-bac{--c:var(--c-bac)}.e-concours{--c:var(--c-concours)}
@@ -104,23 +107,25 @@ dialog::backdrop{background:rgba(10,18,40,.65)}dialog h3{font-size:24px;margin-b
 <body>
 <div id="ann" hidden></div>
 <header><div class="wrap nav"><a class="logo" href="#top" id="brand"></a>
-<nav><a href="#sujets">Sujets</a><a href="#quiz">Quiz</a><a href="#tarifs">Tarifs</a><a href="#faq">FAQ</a></nav>
-<div id="acct"></div><button class="icon" id="theme" aria-label="Changer le thème">◐</button></div></header>
+<nav><a href="#sujets">Sujets</a><a href="#docs">Documents</a><a href="#quiz">Quiz</a><a href="#tarifs">Tarifs</a><a href="#faq">FAQ</a></nav>
+<div id="acct"></div><button class="btn sm gw" id="inst" hidden>Installer</button><button class="icon" id="theme" aria-label="Changer le thème">◐</button></div></header>
 
 <main id="site"><span id="top"></span>
 <section class="hero"><div class="wrap"><div>
  <h1 id="hT"></h1><p id="hP"></p>
  <form class="hsearch" id="hs"><input id="hq" type="search" placeholder="Chercher une matière, un sujet…" aria-label="Rechercher"><button class="btn">Rechercher</button></form>
- <div class="hstat" id="stats"></div></div>
+ <div class="hstat" id="stats"></div><div class="cd" id="cd"></div></div>
  <div id="hImg"></div></div></section>
 
-<section class="pad"><div class="wrap"><h2>Choisis ton examen</h2><p class="sub">Un espace pour chaque examen, avec ses annales corrigées.</p><div class="exams" id="exams"></div></div></section>
+<section class="pad"><div class="wrap"><h2>Choisis ton examen</h2><p class="sub">Un espace pour chaque examen, avec ses annales corrigées.</p><div id="exams"></div></div></section>
 
 <section class="pad" id="sujets" style="padding-top:8px"><div class="wrap"><h2>Bibliothèque de sujets</h2><p class="sub">Filtre par examen, matière ou année. Enregistre tes favoris et marque les sujets terminés.</p>
 <div class="bar"><input id="q" type="search" placeholder="Chercher un sujet…" aria-label="Chercher"><select id="fm" aria-label="Matière"></select><select id="fa" aria-label="Année"></select>
-<select id="fp" aria-label="Accès"><option value="">Tous les accès</option><option value="free">Gratuits</option><option value="pro">Premium</option><option value="fav">Mes favoris</option></select>
+<select id="fp" aria-label="Accès"><option value="">Tous les accès</option><option value="free">Gratuits</option><option value="pro">Premium</option><option value="fiche">Fiches de révision</option><option value="fav">Mes favoris</option></select>
 <select id="fs" aria-label="Tri"><option value="">Plus récents</option><option value="az">Ordre alphabétique</option><option value="free">Gratuits d’abord</option></select></div>
 <div class="tools" id="chips"></div><p class="meta" id="cnt" role="status"></p><div class="grid" id="list"></div></div></section>
+
+<section class="pad" id="docs" hidden style="padding-top:8px"><div class="wrap"><h2>Boutique de documents</h2><p class="sub">Fiches, guides et ressources pour les élèves, les enseignants et les parents d’élèves.</p><div class="tools" id="dchips"></div><div class="grid" id="dlist"></div></div></section>
 
 <section class="pad" style="background:var(--card)"><div class="wrap"><h2>Comment ça marche</h2><p class="sub">Trois étapes, sans carte bancaire.</p>
 <div class="steps"><div><b>1</b><h3>Crée ton compte</h3><p class="meta">Gratuit, avec ton e-mail ou ton compte Google.</p></div><div><b>2</b><h3>Choisis ton sujet</h3><p class="meta">Ouvre un sujet gratuit ou débloque un sujet premium.</p></div><div><b>3</b><h3>Révise et progresse</h3><p class="meta">Corrigés, PDF, vidéos et quiz pour t’entraîner.</p></div></div></div></section>
@@ -153,14 +158,18 @@ const LS={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{retur
 const toast=m=>{const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove("on"),3800)};
 const ERR={"auth/invalid-credential":"E-mail ou mot de passe incorrect.","auth/wrong-password":"E-mail ou mot de passe incorrect.","auth/user-not-found":"E-mail ou mot de passe incorrect.","auth/email-already-in-use":"Cet e-mail a déjà un compte. Connecte-toi.","auth/weak-password":"Mot de passe trop court (6 caractères minimum).","auth/invalid-email":"Adresse e-mail invalide.","auth/too-many-requests":"Trop d’essais. Réessaie dans quelques minutes.","auth/operation-not-allowed":"Cette méthode de connexion n’est pas activée dans Firebase (Authentication > Méthode de connexion).","auth/unauthorized-domain":"Ce domaine n’est pas autorisé dans Firebase (Authentication > Paramètres > Domaines autorisés).","auth/network-request-failed":"Problème de connexion internet.","auth/popup-closed-by-user":"Fenêtre fermée avant la fin.","auth/configuration-not-found":"Authentication n’est pas encore activé dans la console Firebase.","permission-denied":"Refusé par les règles de sécurité Firestore. Vérifie qu’elles sont publiées.","unavailable":"Firestore est injoignable. Vérifie ta connexion."};
 const em=e=>ERR[e.code]||ERR[(e.code||"").replace("firestore/","")]||e.message||"Erreur inconnue.";
-const EX={bepc:"BEPC",bac:"BAC",concours:"Concours"},EXD={bepc:"Brevet d’études du premier cycle",bac:"Baccalauréat, toutes séries",concours:"Fonction publique et grandes écoles"};
-const DEF={name:"Examia",tagline:"Prépare. Révise. Réussis.",announce:"",heroTitle:"Prépare ton examen avec des sujets corrigés.",heroText:"BEPC, BAC et concours : annales, corrections détaillées et quiz pour t’entraîner. Paiement par Mobile Money.",color:"#0f1b3d",accent:"#ffc933",whatsapp:"",linkMonth:"",linkPack:"",priceMonth:1500,pricePack:5000,footer:"",logo:"",hero:"",
+let EX={},EXD={},CC={},GR={},CATS=[],DA="";const GO=["Primaire","Collège","Lycée","Concours"],BASEG={bepc:"Collège",bac:"Lycée",concours:"Concours"};const BASEX={bepc:"BEPC",bac:"BAC",concours:"Concours"},BASED={bepc:"Brevet d’études du premier cycle",bac:"Baccalauréat, toutes séries",concours:"Fonction publique et grandes écoles"},AUD={eleves:"Élèves",enseignants:"Enseignants",parents:"Parents d’élèves"};
+function buildCats(){EX={};EXD={};CC={};GR={};const hid=new Set(CATS.filter(c=>c.hidden).map(c=>c.id));
+ Object.keys(BASEX).forEach(k=>{if(!hid.has(k)){EX[k]=BASEX[k];EXD[k]=BASED[k];GR[k]=BASEG[k]}});
+ CATS.filter(c=>!BASEX[c.id]&&!c.hidden&&c.name).forEach(c=>{EX[c.id]=c.name;EXD[c.id]=c.desc||"";CC[c.id]=c.color||"#2447c5";GR[c.id]=c.group||""})}
+buildCats();
+const DEF={name:"Examia",tagline:"Prépare. Révise. Réussis.",announce:"",countdown:"",heroTitle:"Prépare ton examen avec des sujets corrigés.",heroText:"BEPC, BAC et concours : annales, corrections détaillées et quiz pour t’entraîner. Paiement par Mobile Money.",color:"#0f1b3d",accent:"#ffc933",whatsapp:"",linkMonth:"",linkPack:"",priceMonth:1500,pricePack:5000,footer:"",logo:"",hero:"",
  faq:"Comment payer mon abonnement ? :: Clique sur Payer, règle par Mobile Money avec le lien, puis envoie la référence de ta transaction. Ton accès est activé après vérification.\nCombien de temps pour l’activation ? :: En général quelques heures. Écris-nous sur WhatsApp si tu attends plus longtemps.\nPuis-je acheter un seul sujet ? :: Oui, chaque sujet premium peut être acheté à l’unité quand un prix est indiqué."};
 const ADMIN="franckadre7@gmail.com";
 let S={...DEF},U=null,P=null,ADM=false,AC=new Set(),SUJ=[],QB=[],view="site",ED=null,tab="dash",signing=false,qz=null;
 let F={exam:"",mat:"",an:"",acc:"",sort:"",term:""},FAV=new Set(LS.get("fav",[])),DONE=LS.get("done",{});
-const premium=()=>!!P&&P.premiumUntil>Date.now(),can=x=>x.free||premium()||AC.has(x.id);
-const mats=()=>[...new Set(SUJ.map(x=>x.mat))].sort(),years=()=>[...new Set(SUJ.map(x=>x.an).filter(Boolean))].sort((a,b)=>b-a);
+const premium=()=>!!P&&P.premiumUntil>Date.now(),can=x=>x.free||(!x.audience&&premium())||AC.has(x.id)||ADM;
+const SJ=()=>SUJ.filter(x=>!x.audience&&!x.hidden),DJ=()=>SUJ.filter(x=>x.audience&&!x.hidden),mats=()=>[...new Set(SJ().map(x=>x.mat))].sort(),years=()=>[...new Set(SJ().map(x=>x.an).filter(Boolean))].sort((a,b)=>b-a);
 
 /* ---------- Thème ---------- */
 document.documentElement.dataset.t=LS.get("theme",matchMedia("(prefers-color-scheme:dark)").matches?"d":"l");
@@ -224,6 +233,7 @@ async function loadAll(){
  try{const s=await getDoc(doc(db,"settings","site"));if(s.exists())S={...DEF,...s.data()}}catch(e){toast("Réglages illisibles : "+em(e))}
  try{SUJ=(await getDocs(collection(db,"sujets"))).docs.map(d=>({id:d.id,...d.data()}))}catch{SUJ=[]}
  try{QB=(await getDocs(collection(db,"quiz"))).docs.map(d=>({id:d.id,...d.data()}))}catch{QB=[]}
+ try{CATS=(await getDocs(collection(db,"categories"))).docs.map(d=>({id:d.id,...d.data()}))}catch{CATS=[]}buildCats();
  render()}
 
 /* ---------- Affichage ---------- */
@@ -233,34 +243,56 @@ function render(){
  const a=$("#ann");a.hidden=!S.announce;a.textContent=S.announce;
  $("#hT").textContent=S.heroTitle;$("#hP").textContent=S.heroText;
  $("#hImg").innerHTML=S.hero?`<img class="himg" src="${S.hero}" alt="">`:'<div class="copie" aria-hidden="true">Résoudre : 2x + 3 = 11<br>2x = 11 − 3 = 8<br>x = 4 <span class="g">✓</span><br><span class="r">Bien posé. Vérifie ton résultat.</span></div>';
- $("#stats").textContent=`${SUJ.length} sujet${SUJ.length>1?"s":""} corrigé${SUJ.length>1?"s":""} · ${mats().length} matière${mats().length>1?"s":""} · ${SUJ.filter(x=>x.free).length} gratuit${SUJ.filter(x=>x.free).length>1?"s":""}`;
+ $("#stats").textContent=`${SJ().length} sujet${SJ().length>1?"s":""} corrigé${SJ().length>1?"s":""} · ${mats().length} matière${mats().length>1?"s":""} · ${SJ().filter(x=>x.free).length} gratuit${SJ().filter(x=>x.free).length>1?"s":""}`;
+ $("#cd").innerHTML=String(S.countdown||"").split("\n").map(l=>l.split("::")).filter(x=>x[1]).map(([n,d])=>{const j=Math.ceil((new Date(d.trim()+"T00:00:00")-Date.now())/864e5);return j>=0?`<span class="cdb"><b>J-${j}</b> ${esc(n.trim())}</span>`:""}).join("");
  $("#acct").innerHTML=(ADM?'<button class="btn sm dark" id="bAdm" style="border:2px solid var(--acc)">Admin</button>':"")+(U?'<button class="btn sm" id="bMe">Mon espace</button><button class="btn sm gw" id="bOut">Déconnexion</button>':'<button class="btn sm gw" id="bIn">Connexion</button><button class="btn sm" id="bUp">Créer un compte</button>');
  const on=(i,f)=>{const e=$(i);if(e)e.onclick=f};on("#bAdm",()=>go(view==="adm"?"site":"adm"));on("#bMe",()=>go("me"));on("#bOut",()=>signOut(auth).then(()=>{go("site");toast("Tu es déconnecté.")}));on("#bIn",()=>openAuth("in"));on("#bUp",()=>openAuth("up"));
- $("#exams").innerHTML=Object.entries(EX).map(([k,l])=>{const n=SUJ.filter(x=>x.exam===k).length;return`<button class="exam e-${k}" data-k="${k}"><b>${l}</b><span>${EXD[k]}</span><em>${n} sujet${n>1?"s":""}</em></button>`}).join("");
+ const card=([k,l])=>{const n=SJ().filter(x=>x.exam===k).length;return`<button class="exam e-${k}" data-k="${k}"${CC[k]?` style="--c:${CC[k]}"`:""}><b>${l}</b><span>${EXD[k]}</span><em>${n} sujet${n>1?"s":""}</em></button>`},gs=[...new Set(Object.keys(EX).map(k=>GR[k]||""))].sort((a,b)=>(GO.indexOf(a)+1||99)-(GO.indexOf(b)+1||99)||a.localeCompare(b));
+ $("#exams").innerHTML=gs.map(g=>`${gs.length>1?`<h3 class="grp">${esc(g||"Autres")}</h3>`:""}<div class="exams">${Object.entries(EX).filter(([k])=>(GR[k]||"")===g).map(card).join("")}</div>`).join("");
  $("#exams").querySelectorAll("button").forEach(b=>b.onclick=()=>{F.exam=b.dataset.k;filters();list();$("#sujets").scrollIntoView()});
- filters();list();plans();
+ filters();list();docs();qchips();plans();pwa();
  const fq=String(S.faq||"").split("\n").map(l=>l.split("::")).filter(x=>x[1]);
  $("#faqs").innerHTML=fq.map(([q,r])=>`<details><summary>${esc(q.trim())}</summary><p>${esc(r.trim())}</p></details>`).join("");$("#faq").hidden=!fq.length;
- $("#foot").innerHTML=`<div><b class="disp" style="font-size:22px">${esc(S.name)}</b><p>${esc(S.footer||S.tagline)}</p></div><div><b>Navigation</b><a href="#sujets">Sujets</a><a href="#quiz">Quiz</a><a href="#tarifs">Tarifs</a></div><div><b>Contact</b>${S.whatsapp?`<a href="https://wa.me/${esc(S.whatsapp)}" target="_blank" rel="noopener">WhatsApp</a>`:""}<a href="#faq">Questions fréquentes</a></div>`;
+ $("#foot").innerHTML=`<div><b class="disp" style="font-size:22px">${esc(S.name)}</b><p>${esc(S.footer||S.tagline)}</p></div><div><b>Navigation</b><a href="#sujets">Sujets</a><a href="#docs">Documents</a><a href="#quiz">Quiz</a><a href="#tarifs">Tarifs</a></div><div><b>Contact</b>${S.whatsapp?`<a href="https://wa.me/${esc(S.whatsapp)}" target="_blank" rel="noopener">WhatsApp</a>`:""}<a href="#faq">Questions fréquentes</a></div>`;
  $("#copy").textContent="© "+new Date().getFullYear()+" "+S.name+". Tous droits réservés.";
  if(view==="me")renderMe()}
+async function pwa(){const k=(S.logo||"").length+S.color+S.accent+S.name;if(pwa.k===k)return;pwa.k=k;
+ try{const mk=async n=>{const c=document.createElement("canvas");c.width=c.height=n;const g=c.getContext("2d");g.fillStyle=S.color;g.fillRect(0,0,n,n);
+   if(S.logo){const i=new Image();i.src=S.logo;await i.decode();const r=Math.min(n*.7/i.width,n*.7/i.height);g.drawImage(i,(n-i.width*r)/2,(n-i.height*r)/2,i.width*r,i.height*r)}
+   else{g.fillStyle=S.accent;g.font=`800 ${n*.6}px sans-serif`;g.textAlign="center";g.textBaseline="middle";g.fillText((S.name||"E")[0],n/2,n/2)}
+   return c.toDataURL("image/png")},a=await mk(192),b=await mk(512),base=location.origin+location.pathname,
+  m={name:S.name,short_name:S.name,description:S.tagline,start_url:base,scope:base,display:"standalone",background_color:S.color,theme_color:S.color,lang:"fr",icons:[{src:a,sizes:"192x192",type:"image/png",purpose:"any"},{src:b,sizes:"512x512",type:"image/png",purpose:"any"}]};
+  document.querySelector("link[rel=manifest]").href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:"application/manifest+json"}));
+  document.querySelectorAll("link[rel=icon],link[rel=apple-touch-icon]").forEach(l=>l.href=a);
+  document.querySelector("meta[name=theme-color]").content=S.color}catch{}}
 function opts(sel,first,vals,cur){sel.innerHTML=`<option value="">${first}</option>`+vals.map(v=>`<option ${String(v)===cur?"selected":""}>${esc(v)}</option>`).join("")}
 function filters(){opts($("#fm"),"Toutes les matières",mats(),F.mat);opts($("#fa"),"Toutes les années",years(),F.an);$("#fp").value=F.acc;$("#fs").value=F.sort;if($("#q").value!==F.term)$("#q").value=F.term;
  const b=$("#chips");b.innerHTML="";[["","Tous"],...Object.entries(EX)].forEach(([k,l])=>{const c=document.createElement("button");c.className="chip";c.textContent=l;c.setAttribute("aria-pressed",F.exam===k);c.onclick=()=>{F.exam=k;filters();list()};b.appendChild(c)})}
 $("#q").oninput=e=>{F.term=e.target.value;list()};$("#fm").onchange=e=>{F.mat=e.target.value;list()};$("#fa").onchange=e=>{F.an=e.target.value;list()};$("#fp").onchange=e=>{F.acc=e.target.value;list()};$("#fs").onchange=e=>{F.sort=e.target.value;list()};
 $("#hs").onsubmit=e=>{e.preventDefault();F.term=$("#hq").value.trim();filters();list();$("#sujets").scrollIntoView()};
-function list(){let L=SUJ.filter(x=>(!F.exam||x.exam===F.exam)&&(!F.mat||x.mat===F.mat)&&(!F.an||String(x.an)===F.an)&&(!F.acc||(F.acc==="free"?x.free:F.acc==="pro"?!x.free:FAV.has(x.id)))&&(x.title+" "+x.mat).toLowerCase().includes(F.term.toLowerCase()));
+function list(){let L=SJ().filter(x=>(!F.exam||x.exam===F.exam)&&(!F.mat||x.mat===F.mat)&&(!F.an||String(x.an)===F.an)&&(!F.acc||(F.acc==="free"?x.free:F.acc==="pro"?!x.free:F.acc==="fiche"?x.fiche:FAV.has(x.id)))&&(x.title+" "+x.mat).toLowerCase().includes(F.term.toLowerCase()));
  L.sort(F.sort==="az"?(a,b)=>a.title.localeCompare(b.title):F.sort==="free"?(a,b)=>(b.free-a.free)||(b.an-a.an):(a,b)=>(b.an||0)-(a.an||0)||a.title.localeCompare(b.title));
  $("#cnt").textContent=L.length+" résultat"+(L.length>1?"s":"");
- $("#list").innerHTML=L.length?L.map(x=>{const o=can(x),fv=FAV.has(x.id);return`<article class="fiche e-${x.exam}"><div class="top"><span>${EX[x.exam]||""} · ${esc(x.mat)} · ${x.an||""}</span><button class="fav" data-f="${x.id}" aria-pressed="${fv}" aria-label="Favori">${fv?"★":"☆"}</button></div><h3>${esc(x.title)}</h3><div class="tags">${x.free?'<i class="ok">Gratuit</i>':AC.has(x.id)?'<i class="ok">Acheté</i>':'<i class="pro">Premium</i>'}${x.hasPdf?"<i>PDF</i>":""}${x.hasVideo?"<i>Vidéo</i>":""}${DONE[x.id]?'<i class="ok">Terminé</i>':""}</div><button class="btn ${o?"":"dark"}" data-id="${x.id}">${o?"Ouvrir le sujet":"Débloquer"}</button></article>`}).join(""):'<div class="empty">Aucun sujet ne correspond à ta recherche. Retire un filtre ou essaie une autre matière.</div>';
+ $("#list").innerHTML=L.length?L.map(x=>{const o=can(x),fv=FAV.has(x.id);return`<article class="fiche e-${x.exam}"${CC[x.exam]?` style="--c:${CC[x.exam]}"`:""}><div class="top"><span>${EX[x.exam]||""} · ${esc(x.mat)} · ${x.an||""}</span><button class="fav" data-f="${x.id}" aria-pressed="${fv}" aria-label="Favori">${fv?"★":"☆"}</button></div><h3>${esc(x.title)}</h3><div class="tags">${x.free?'<i class="ok">Gratuit</i>':AC.has(x.id)?'<i class="ok">Acheté</i>':'<i class="pro">Premium</i>'}${x.fiche?'<i class="ok">Fiche</i>':""}${x.hasPdf?"<i>PDF</i>":""}${x.hasVideo?"<i>Vidéo</i>":""}${DONE[x.id]?'<i class="ok">Terminé</i>':""}</div>${!o&&x.previewId?`<button class="btn ghost sm" data-pv="${x.id}">Voir un aperçu gratuit</button>`:""}<button class="btn ${o?"":"dark"}" data-id="${x.id}">${o?"Ouvrir le sujet":"Débloquer"}</button></article>`}).join(""):'<div class="empty">Aucun sujet ne correspond à ta recherche. Retire un filtre ou essaie une autre matière.</div>';
  $("#list").querySelectorAll("[data-id]").forEach(b=>b.onclick=()=>openSujet(b.dataset.id));
+ $("#list").querySelectorAll("[data-pv]").forEach(b=>b.onclick=()=>openPreview(b.dataset.pv));
  $("#list").querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>{toggleFav(b.dataset.f);list()})}
+function docs(){const D=DJ(),L=D.filter(x=>!DA||x.audience===DA);$("#docs").hidden=!D.length;
+ const b=$("#dchips");b.innerHTML="";[["","Tous"],...Object.entries(AUD)].forEach(([k,l])=>{const c=document.createElement("button");c.className="chip";c.textContent=l;c.setAttribute("aria-pressed",DA===k);c.onclick=()=>{DA=k;docs()};b.appendChild(c)});
+ $("#dlist").innerHTML=L.map(x=>{const o=can(x);return`<article class="fiche" style="--c:var(--blue)"><div class="top"><span>${AUD[x.audience]||""} · ${esc(x.mat)}</span></div><h3>${esc(x.title)}</h3><div class="tags">${x.free?'<i class="ok">Gratuit</i>':AC.has(x.id)?'<i class="ok">Acheté</i>':`<i class="pro">${x.price?fcfa(x.price):"Payant"}</i>`}${x.hasPdf?"<i>PDF</i>":""}</div>${!o&&x.previewId?`<button class="btn ghost sm" data-pv="${x.id}">Voir un aperçu gratuit</button>`:""}<button class="btn ${o?"":"dark"}" data-id="${x.id}">${o?"Ouvrir le document":"Acheter"}</button></article>`}).join("")||'<div class="empty">Aucun document dans cette catégorie.</div>';
+ $("#dlist").querySelectorAll("[data-id]").forEach(b=>b.onclick=()=>openSujet(b.dataset.id));
+ $("#dlist").querySelectorAll("[data-pv]").forEach(b=>b.onclick=()=>openPreview(b.dataset.pv))}
+async function openPreview(id){const x=SUJ.find(s=>s.id===id),d=$("#dlg");
+ d.innerHTML=`<h3>Aperçu gratuit</h3><p class="meta">${esc(x.title)}</p><div id="pv">Chargement…</div><div class="row"><button class="btn ghost" id="x">Fermer</button><button class="btn" id="bu">${can(x)?"Ouvrir":x.audience?"Acheter ce document":"Débloquer"}</button></div>`;d.showModal();
+ $("#x").onclick=()=>d.close();$("#bu").onclick=()=>{d.close();openSujet(id)};
+ try{const u=await mediaUrl(x.previewId);$("#pv").innerHTML=u.startsWith("data:image")?`<img src="${u}" alt="" style="max-width:100%;border-radius:8px">`:`<iframe src="${u}" style="width:100%;height:60vh;border:0;border-radius:8px"></iframe><p><a class="btn ghost sm" href="${u}" target="_blank" rel="noopener">Ouvrir dans un nouvel onglet</a></p>`}catch{$("#pv").textContent="Aperçu indisponible."}}
+function touch(){const t=new Date().toISOString().slice(0,10),y=new Date(Date.now()-864e5).toISOString().slice(0,10),s=LS.get("streak",{n:0,last:""});if(s.last===t)return;s.n=s.last===y?s.n+1:1;s.last=t;LS.set("streak",s)}
 function toggleFav(id){FAV.has(id)?FAV.delete(id):FAV.add(id);LS.set("fav",[...FAV])}
 async function openSujet(id){const x=SUJ.find(s=>s.id===id);
  if(!can(x)){if(!U){toast("Crée un compte pour débloquer ce sujet.");return openAuth("up")}return buyDlg({kind:"sujet",id:x.id,label:x.title,price:x.price,link:x.payLink,days:0},true)}
- const d=$("#dlg");d.innerHTML=`<h3>${esc(x.title)}</h3><p class="meta">${EX[x.exam]||""} · ${esc(x.mat)} · ${x.an||""}</p><div id="sc">Chargement…</div>
+ const d=$("#dlg");d.innerHTML=`<h3>${esc(x.title)}</h3><p class="meta">${esc(x.audience?AUD[x.audience]:EX[x.exam]||"")} · ${esc(x.mat)}${x.an?" · "+x.an:""}</p><div id="sc">Chargement…</div>
  <div class="row"><button class="btn ghost sm" id="sh">Partager</button><button class="btn ghost sm" id="fv"></button><button class="btn ghost sm" id="dn"></button><button class="btn sm" id="cl">Fermer</button></div>`;
- d.showModal();const fv=()=>{$("#fv").textContent=FAV.has(id)?"★ Favori":"☆ Favori";$("#dn").textContent=DONE[id]?"✓ Terminé":"Marquer terminé"};fv();
+ touch();d.showModal();const fv=()=>{$("#fv").textContent=FAV.has(id)?"★ Favori":"☆ Favori";$("#dn").textContent=DONE[id]?"✓ Terminé":"Marquer terminé"};fv();
  $("#cl").onclick=()=>d.close();$("#fv").onclick=()=>{toggleFav(id);fv();list()};$("#dn").onclick=()=>{DONE[id]?delete DONE[id]:DONE[id]=1;LS.set("done",DONE);fv();list()};
  $("#sh").onclick=()=>navigator.share?navigator.share({title:x.title,url:location.href}).catch(()=>{}):open("https://wa.me/?text="+encodeURIComponent(x.title+" "+location.href));
  try{const c=(await getDoc(doc(db,"sujetsContent",id))).data()||{};let h="";
@@ -269,7 +301,11 @@ async function openSujet(id){const x=SUJ.find(s=>s.id===id);
   const y=(c.video||"").match(/(?:v=|youtu\.be\/|embed\/)([\w-]{11})/);
   if(y)h+=`<iframe src="https://www.youtube-nocookie.com/embed/${y[1]}" allowfullscreen style="width:100%;aspect-ratio:16/9;border:0;border-radius:8px"></iframe>`;
   if(c.pdfId)h+=`<p><button class="btn dark" id="pdf">Télécharger le PDF</button></p>`;
+  if(x.duration&&c.corrige)h=`<p><button class="btn dark" id="sim">Simulation chronométrée (${x.duration} min)</button></p>`+h;
   $("#sc").innerHTML=h||"Contenu bientôt disponible.";
+  if($("#sim"))$("#sim").onclick=()=>{const cr=$("#sc .corr"),b=$("#sim");if(cr)cr.hidden=true;let t=x.duration*60;clearInterval(openSujet.iv);d.onclose=()=>clearInterval(openSujet.iv);
+   const end=()=>{clearInterval(openSujet.iv);b.textContent="Voir la correction";b.onclick=()=>{if(cr)cr.hidden=false;b.hidden=true}},tick=()=>{b.textContent=`⏱ ${String(Math.floor(t/60)).padStart(2,"0")}:${String(t%60).padStart(2,"0")} · Terminer`;if(t--<=0)end()};
+   openSujet.iv=setInterval(tick,1000);tick();b.onclick=end};
   if(c.pdfId)$("#pdf").onclick=async()=>{const a=document.createElement("a");a.href=await mediaUrl(c.pdfId);a.download=x.title+".pdf";a.click()}
  }catch{$("#sc").textContent="Accès refusé. Vérifie ton abonnement."}}
 
@@ -277,9 +313,9 @@ async function openSujet(id){const x=SUJ.find(s=>s.id===id);
 const QZ={bepc:[["Racine carrée de 144 ?",["10","12","14","16"],1],["Formule de l’eau ?",["CO2","O2","H2O","NaCl"],2],["Pluriel de « cheval » ?",["chevals","chevaux","chevaus","chevales"],1],["7 × 8 = ?",["54","56","58","64"],1]],
  bac:[["Dérivée de x² ?",["x","2x","x²","2"],1],["Auteur des « Misérables » ?",["Victor Hugo","Émile Zola","Molière","Voltaire"],0],["Unité de force ?",["Joule","Watt","Newton","Pascal"],2],["Limite de 1/x en +∞ ?",["1","+∞","0","−∞"],2]],
  concours:[["UEMOA signifie ?",["Union économique et monétaire ouest-africaine","Union européenne des marchés africains","Union des États du Maghreb","Union économique mondiale"],0],["15 % de 200 ?",["15","20","30","45"],2],["Suite : 2, 4, 8, 16, … ?",["24","30","32","36"],2],["Siège de l’Union africaine ?",["Dakar","Addis-Abeba","Nairobi","Abuja"],1]]};
-Object.entries(EX).forEach(([k,l])=>{const b=document.createElement("button");b.className="chip";b.textContent=l;b.onclick=()=>{const own=QB.filter(q=>q.exam===k).map(q=>[q.q,q.o,q.a]),bank=own.length?own:QZ[k];qz={k,Q:[...bank].sort(()=>Math.random()-.5).slice(0,10),i:0,s:0,d:false};quiz()};$("#qc").appendChild(b)});
+function qchips(){$("#qc").innerHTML="";Object.entries(EX).forEach(([k,l])=>{const b=document.createElement("button");b.className="chip";b.textContent=l;b.onclick=()=>{const own=QB.filter(q=>q.exam===k).map(q=>[q.q,q.o,q.a]),bank=own.length?own:(QZ[k]||[]);if(!bank.length)return toast("Pas encore de questions pour cet examen.");qz={k,Q:[...bank].sort(()=>Math.random()-.5).slice(0,10),i:0,s:0,d:false};quiz()};$("#qc").appendChild(b)})}
 function quiz(){const box=$("#qb"),Q=qz.Q;
- if(qz.i>=Q.length){const best=P?.best?.[qz.k]??0,pc=Math.round(qz.s/Q.length*100);
+ if(qz.i>=Q.length){touch();const best=P?.best?.[qz.k]??0,pc=Math.round(qz.s/Q.length*100);
   if(U&&P&&pc>best){P.best={...(P.best||{}),[qz.k]:pc};setDoc(doc(db,"users",U.uid),{best:P.best},{merge:true}).catch(()=>{})}
   box.innerHTML=`<h3>Score : ${qz.s} / ${Q.length} (${pc} %)</h3><p>${pc===100?"Sans faute. Passe aux sujets corrigés.":pc>=50?"Bon début. Refais le quiz pour viser le sans-faute.":"Relis les corrigés de la matière, puis réessaie."}</p>${U?`<p class="meta">Meilleur score ${EX[qz.k]} : ${Math.max(best,pc)} %</p>`:'<p class="meta">Connecte-toi pour enregistrer ton meilleur score.</p>'}<button class="btn" id="ag">Recommencer</button>`;
   $("#ag").onclick=()=>{qz={...qz,Q:[...qz.Q].sort(()=>Math.random()-.5),i:0,s:0,d:false};quiz()};return}
@@ -298,6 +334,7 @@ function pay(id){if(!U){toast("Crée un compte avant de payer.");return openAuth
 function buyDlg(it,sub){const d=$("#dlg");
  d.innerHTML=`<h3>${esc(it.label)}</h3>${it.price?`<p>Montant : <b>${fcfa(it.price)}</b></p>`:""}
  ${it.link?`<p><a class="btn" href="${esc(it.link)}" target="_blank" rel="noopener">1. Payer avec Mobile Money</a></p>`:`<p class="err">Le lien de paiement n’est pas encore disponible.${S.whatsapp?` Contacte-nous sur <a href="https://wa.me/${esc(S.whatsapp)}">WhatsApp</a>.`:""}</p>`}
+ ${S.whatsapp?`<p class="meta"><a href="https://wa.me/${esc(S.whatsapp)}?text=${encodeURIComponent("Bonjour, j’ai une question sur : "+it.label)}" target="_blank" rel="noopener">Une question ? Écrire sur WhatsApp</a></p>`:""}
  <label for="rf">2. Après le paiement, entre la référence de la transaction ou le numéro utilisé</label><input id="rf" maxlength="80"><p class="err" id="err"></p>
  <div class="row">${sub?'<button class="btn ghost" id="ab">Voir les abonnements</button>':""}<button class="btn ghost" id="x">Fermer</button><button class="btn dark" id="ok">J’ai payé</button></div>`;
  d.showModal();$("#x").onclick=()=>d.close();if(sub)$("#ab").onclick=()=>{d.close();$("#tarifs").scrollIntoView()};
@@ -311,6 +348,7 @@ async function renderMe(){const b=$("#mebox");if(!U){go("site");return openAuth(
  const days=premium()?Math.ceil((P.premiumUntil-Date.now())/864e5):0,fav=SUJ.filter(x=>FAV.has(x.id));
  b.innerHTML=`<h2>Bonjour, ${esc((P?.name||"").split(" ")[0])}</h2><p class="meta">${esc(U.email)}</p>
  <div class="kpis"><div><b>${premium()?days+" j":"Gratuit"}</b><span>${premium()?"Premium jusqu’au "+fdate(P.premiumUntil):"Abonnement"}</span></div><div><b>${Object.keys(DONE).filter(k=>SUJ.some(s=>s.id===k)).length}/${SUJ.length}</b><span>Sujets terminés</span></div><div><b>${fav.length}</b><span>Favoris</span></div><div><b>${AC.size}</b><span>Sujets achetés</span></div></div>
+ ${(()=>{const s0=LS.get("streak",{n:0,last:""}),yd=new Date(Date.now()-864e5).toISOString().slice(0,10),n=s0.last>=yd?s0.n:0,dn=Object.keys(DONE).filter(k=>SUJ.some(s=>s.id===k)).length,bs=Object.values(P?.best||{}),B=[[n>=3,"3 jours d’affilée"],[n>=7,"7 jours d’affilée"],[n>=30,"30 jours d’affilée"],[dn>=1,"1er sujet terminé"],[dn>=5,"5 sujets terminés"],[dn>=20,"20 sujets terminés"],[bs.some(v=>v>=100),"Quiz sans faute"]];return`<h3>Régularité</h3><p class="meta">Série en cours : <b>${n} jour${n>1?"s":""}</b>. Reviens chaque jour pour la prolonger.</p><div class="tags" style="margin-bottom:22px">${B.filter(x=>x[0]).map(x=>`<i class="ok">🏅 ${x[1]}</i>`).join("")||"<i>Aucun badge pour l’instant</i>"}</div>`})()}
  <h3>Meilleurs scores aux quiz</h3><p class="meta">${Object.entries(EX).map(([k,l])=>l+" : "+(P?.best?.[k]!=null?P.best[k]+" %":"pas encore joué")).join(" · ")}</p>
  <h3 style="margin-top:26px">Mes favoris</h3><div class="grid" style="margin-top:12px">${fav.map(x=>`<div class="row2"><b>${esc(x.title)}</b><button class="btn sm" data-o="${x.id}">Ouvrir</button></div>`).join("")||'<div class="empty">Aucun favori. Touche l’étoile d’un sujet pour le retrouver ici.</div>'}</div>
  <h3 style="margin-top:26px">Mes paiements</h3><div style="margin-top:12px">${pays.map(p=>`<div class="row2"><div><b>${esc(p.label)}</b><div class="meta">${fcfa(p.amount)} · Réf. ${esc(p.ref)}</div></div><span class="st ${p.status}">${ST[p.status]||p.status}</span></div>`).join("")||'<div class="empty">Aucun paiement pour le moment.</div>'}</div>
@@ -318,15 +356,24 @@ async function renderMe(){const b=$("#mebox");if(!U){go("site");return openAuth(
  b.querySelectorAll("[data-o]").forEach(x=>x.onclick=()=>openSujet(x.dataset.o));$("#mt").onclick=()=>{go("site");$("#tarifs").scrollIntoView()}}
 
 /* ---------- Espace admin ---------- */
-const TABS=[["dash","Tableau de bord"],["site","Site"],["sujets","Sujets"],["quiz","Quiz"],["pay","Paiements"],["mem","Membres"]];
+const TABS=[["dash","Tableau de bord"],["site","Site"],["sujets","Sujets"],["cat","Catégories"],["quiz","Quiz"],["pay","Paiements"],["mem","Membres"]];
 function admin(){const t=$("#tabs");t.innerHTML="";TABS.forEach(([k,l])=>{const b=document.createElement("button");b.className="chip";b.textContent=l;b.setAttribute("aria-pressed",tab===k);b.onclick=()=>{tab=k;admin()};t.appendChild(b)});
- ({dash:admDash,site:admSite,sujets:admSujets,quiz:admQuiz,pay:admPay,mem:admMem})[tab]($("#abox"))}
+ ({dash:admDash,site:admSite,sujets:admSujets,cat:admCat,quiz:admQuiz,pay:admPay,mem:admMem})[tab]($("#abox"))}
+function admCat(box){const all=[...Object.entries(BASEX).map(([id,name])=>({id,name,base:1,hidden:!!CATS.find(c=>c.id===id)?.hidden})),...CATS.filter(c=>!BASEX[c.id])];
+ box.innerHTML=`<form class="fm" id="cf"><h3>Nouvel examen, concours ou catégorie</h3><label>Nom<input name="name" required maxlength="40"></label><label>Couleur<input type="color" name="color" value="#2447c5"></label><label class="full">Description courte<input name="desc" maxlength="80"></label><label class="full">Groupe (Primaire, Collège, Lycée, Concours… ou un nom libre)<input name="group" list="gl" maxlength="30"><datalist id="gl"><option>Primaire</option><option>Collège</option><option>Lycée</option><option>Concours</option></datalist></label><div class="row"><button class="btn">Ajouter</button></div></form>
+ ${all.map(c=>`<div class="row2"><div><b>${esc(c.name)}</b> ${c.hidden?'<span class="st pending">Masqué</span>':""}<div class="meta">${GR[c.id]?esc(GR[c.id])+" · ":""}${SUJ.filter(x=>x.exam===c.id).length} contenu(s)</div></div><div><button class="btn sm dark" data-h="${c.id}">${c.hidden?"Afficher":"Masquer"}</button>${c.base?"":` <button class="btn sm" data-g="${c.id}">Groupe</button> <button class="btn sm red" data-d="${c.id}">Supprimer</button>`}</div></div>`).join("")}`;
+ $("#cf").onsubmit=async e=>{e.preventDefault();const fd=new FormData(e.target),name=fd.get("name").trim(),id=name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")||"cat"+Date.now();
+  if(BASEX[id]||CATS.some(c=>c.id===id))return toast("Cette catégorie existe déjà.");
+  try{const o={name,desc:fd.get("desc").trim(),color:fd.get("color"),group:fd.get("group").trim()};await setDoc(doc(db,"categories",id),o);CATS.push({id,...o});buildCats();render();toast("Catégorie ajoutée.");admCat(box)}catch(er){toast(em(er))}};
+ box.querySelectorAll("[data-h]").forEach(b=>b.onclick=async()=>{const id=b.dataset.h,c=CATS.find(z=>z.id===id),h=!c?.hidden;try{await setDoc(doc(db,"categories",id),{hidden:h},{merge:true});if(c)c.hidden=h;else CATS.push({id,hidden:h});buildCats();render();admCat(box)}catch(er){toast(em(er))}});
+ box.querySelectorAll("[data-g]").forEach(b=>b.onclick=async()=>{const id=b.dataset.g,c=CATS.find(z=>z.id===id),g=prompt("Groupe de cette catégorie (Primaire, Collège, Lycée, Concours…) :",c?.group||"");if(g===null)return;try{await setDoc(doc(db,"categories",id),{group:g.trim()},{merge:true});c.group=g.trim();buildCats();render();admCat(box)}catch(er){toast(em(er))}});
+ box.querySelectorAll("[data-d]").forEach(b=>b.onclick=async()=>{const id=b.dataset.d;if(SUJ.some(x=>x.exam===id))return toast("Supprime ou déplace d’abord les contenus de cette catégorie, ou masque-la.");if(!confirm("Supprimer cette catégorie ?"))return;try{await deleteDoc(doc(db,"categories",id));CATS=CATS.filter(c=>c.id!==id);buildCats();render();admCat(box)}catch(er){toast(em(er))}})}
 async function admDash(box){box.textContent="Chargement…";
  try{const[us,ps]=await Promise.all([getDocs(collection(db,"users")),getDocs(collection(db,"payments"))]),u=us.docs.map(d=>d.data()),p=ps.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
   box.innerHTML=`<div class="kpis"><div><b>${u.length}</b><span>Membres</span></div><div><b>${u.filter(x=>x.premiumUntil>Date.now()).length}</b><span>Abonnés actifs</span></div><div><b>${p.filter(x=>x.status==="pending").length}</b><span>Paiements à valider</span></div><div><b>${fcfa(p.filter(x=>x.status==="approved").reduce((a,x)=>a+(+x.amount||0),0))}</b><span>Encaissé (validé)</span></div><div><b>${SUJ.length}</b><span>Sujets publiés</span></div></div>
   <h3>Derniers paiements</h3><div style="margin-top:12px">${p.slice(0,8).map(x=>`<div class="row2"><div><b>${esc(x.name)}</b> · ${esc(x.label)}<div class="meta">${fcfa(x.amount)} · Réf. ${esc(x.ref)}</div></div><span class="st ${x.status}">${ST[x.status]||x.status}</span></div>`).join("")||'<div class="empty">Aucun paiement.</div>'}</div>`
  }catch(e){box.textContent=em(e)}}
-const FS=[["name","Nom du site"],["tagline","Slogan"],["announce","Bandeau d’annonce (vide = masqué)","full"],["heroTitle","Titre d’accueil","full"],["heroText","Texte d’accueil","area"],["whatsapp","WhatsApp (ex : 22997000000)"],["priceMonth","Prix mensuel (FCFA)","number"],["linkMonth","Lien de paiement — abonnement mensuel","full"],["pricePack","Prix pack examen (FCFA)","number"],["linkPack","Lien de paiement — pack examen","full"],["footer","Texte du bas de page","full"],["faq","FAQ : une ligne par question, au format  Question :: Réponse","area"]];
+const FS=[["name","Nom du site"],["tagline","Slogan"],["announce","Bandeau d’annonce (vide = masqué)","full"],["heroTitle","Titre d’accueil","full"],["heroText","Texte d’accueil","area"],["whatsapp","WhatsApp (ex : 22997000000)"],["priceMonth","Prix mensuel (FCFA)","number"],["linkMonth","Lien de paiement — abonnement mensuel","full"],["pricePack","Prix pack examen (FCFA)","number"],["linkPack","Lien de paiement — pack examen","full"],["footer","Texte du bas de page","full"],["countdown","Comptes à rebours : une ligne par examen, au format  Nom :: AAAA-MM-JJ  (ex : BEPC :: 2027-06-15)","area"],["faq","FAQ : une ligne par question, au format  Question :: Réponse","area"]];
 function admSite(box){box.innerHTML=`<form class="fm" id="sf"><h3>Identité et réglages</h3>${FS.map(([k,l,t])=>`<label class="${t==="full"||t==="area"?"full":""}">${l}${t==="area"?`<textarea name="${k}" rows="4">${esc(S[k])}</textarea>`:`<input name="${k}" type="${t==="number"?"number":"text"}" value="${esc(S[k])}">`}</label>`).join("")}
  <label>Couleur principale<input type="color" name="color" value="${S.color}"></label><label>Couleur d’accent<input type="color" name="accent" value="${S.accent}"></label>
  <label>Logo (image)<input type="file" name="logo" accept="image/*"></label><label>Photo d’accueil (image)<input type="file" name="hero" accept="image/*"></label>
@@ -338,29 +385,33 @@ function admSite(box){box.innerHTML=`<form class="fm" id="sf"><h3>Identité et r
    await setDoc(doc(db,"settings","site"),o);S=o;render();toast("Réglages enregistrés.")}catch(er){toast(em(er))}}}
 async function admSujets(box){
  box.innerHTML=`<form class="fm" id="sf"><h3>${ED?"Modifier le sujet":"Nouveau sujet"}</h3>
- <label>Titre<input name="title" required></label><label>Examen<select name="exam">${Object.entries(EX).map(([k,v])=>`<option value="${k}">${v}</option>`).join("")}</select></label>
- <label>Matière<input name="mat" required></label><label>Année<input name="an" type="number" value="${new Date().getFullYear()}"></label>
- <label class="full"><input type="checkbox" name="free"> Sujet gratuit (sinon réservé aux abonnés ou aux acheteurs)</label>
+ <label class="full">Type de contenu<select name="audience"><option value="">Sujet d’examen</option><option value="eleves">Document pour élèves</option><option value="enseignants">Document pour enseignants</option><option value="parents">Document pour parents d’élèves</option></select></label><label>Titre<input name="title" required></label><label>Examen / catégorie<select name="exam">${Object.entries(EX).map(([k,v])=>`<option value="${k}">${v}</option>`).join("")}</select></label>
+ <label>Matière ou thème<input name="mat" required></label><label>Année<input name="an" type="number" value="${new Date().getFullYear()}"></label>
+ <label class="full"><input type="checkbox" name="free"> Gratuit (sinon réservé aux abonnés ou aux acheteurs ; un document ne s’obtient que par achat)</label>
+ <label class="full"><input type="checkbox" name="hidden"> Masqué (retiré du site sans être supprimé ; les achats restent valides)</label>
  <label>Prix de vente à l’unité (FCFA, facultatif)<input name="price" type="number" min="0"></label><label>Lien de paiement de ce sujet<input name="payLink" placeholder="https://…"></label>
+ <label>Durée de la simulation (minutes, facultatif)<input name="duration" type="number" min="0"></label><label><input type="checkbox" name="fiche"> Fiche de révision (étiquette « Fiche » et filtre dédié)</label>
  <label class="full">Corrigé (texte)<textarea name="corrige" rows="5"></textarea></label>
  <label>Photo / image<input type="file" name="image" accept="image/*"></label><label>PDF (5 Mo max)<input type="file" name="pdf" accept="application/pdf"></label>
+ <label class="full">Aperçu gratuit (facultatif) : extrait en PDF court ou en image, visible par tout le monde<input type="file" name="preview" accept="application/pdf,image/*"></label>
  <label class="full">Vidéo YouTube (lien)<input name="video" placeholder="https://youtu.be/…"></label>
  <div class="row">${ED?'<button type="button" class="btn ghost" id="cn">Annuler</button>':""}<button class="btn" id="sv">Enregistrer</button></div></form>
- ${[...SUJ].sort((a,b)=>(b.an||0)-(a.an||0)).map(x=>`<div class="row2"><div><b>${esc(x.title)}</b><div class="meta">${EX[x.exam]||""} · ${esc(x.mat)} · ${x.an||""} · ${x.free?"Gratuit":"Premium"}</div></div><div><button class="btn sm dark" data-e="${x.id}">Modifier</button> <button class="btn sm red" data-d="${x.id}">Supprimer</button></div></div>`).join("")||'<div class="empty">Aucun sujet. Ajoute le premier ci-dessus.</div>'}`;
+ ${[...SUJ].sort((a,b)=>(b.an||0)-(a.an||0)).map(x=>`<div class="row2"><div><b>${esc(x.title)}</b><div class="meta">${x.audience?AUD[x.audience]:EX[x.exam]||""} · ${esc(x.mat)} · ${x.an||""} · ${x.free?"Gratuit":x.audience?"Payant":"Premium"}${x.hidden?" · Masqué":""}</div></div><div><button class="btn sm dark" data-e="${x.id}">Modifier</button> <button class="btn sm red" data-d="${x.id}">Supprimer</button></div></div>`).join("")||'<div class="empty">Aucun sujet. Ajoute le premier ci-dessus.</div>'}`;
  const f=$("#sf");
- if(ED){const x=SUJ.find(s=>s.id===ED.id);["title","exam","mat","an","price","payLink"].forEach(k=>f.elements[k].value=x[k]??"");f.elements.free.checked=!!x.free;f.elements.corrige.value=ED.c.corrige||"";f.elements.video.value=ED.c.video||"";$("#cn").onclick=()=>{ED=null;admSujets(box)}}
+ if(ED){const x=SUJ.find(s=>s.id===ED.id);["audience","title","exam","mat","an","price","payLink","duration"].forEach(k=>f.elements[k].value=x[k]??"");f.elements.free.checked=!!x.free;f.elements["hidden"].checked=!!x.hidden;f.elements["fiche"].checked=!!x.fiche;f.elements.corrige.value=ED.c.corrige||"";f.elements.video.value=ED.c.video||"";$("#cn").onclick=()=>{ED=null;admSujets(box)}}
  box.querySelectorAll("[data-e]").forEach(b=>b.onclick=async()=>{ED={id:b.dataset.e,c:(await getDoc(doc(db,"sujetsContent",b.dataset.e))).data()||{}};admSujets(box);scrollTo(0,0)});
  box.querySelectorAll("[data-d]").forEach(b=>b.onclick=async()=>{if(!confirm("Supprimer ce sujet et ses fichiers ?"))return;const id=b.dataset.d,c=(await getDoc(doc(db,"sujetsContent",id))).data()||{};
-  await mediaOp(c.imageId);await mediaOp(c.pdfId);await deleteDoc(doc(db,"sujetsContent",id));await deleteDoc(doc(db,"sujets",id));SUJ=SUJ.filter(s=>s.id!==id);render();admSujets(box)});
+  await mediaOp(c.imageId);await mediaOp(c.pdfId);await mediaOp(c.previewId);await deleteDoc(doc(db,"sujetsContent",id));await deleteDoc(doc(db,"sujets",id));SUJ=SUJ.filter(s=>s.id!==id);render();admSujets(box)});
  f.onsubmit=async e=>{e.preventDefault();const fd=new FormData(f),btn=$("#sv");btn.disabled=true;btn.textContent="Envoi en cours…";
   try{const pl=fd.get("payLink").trim();if(pl&&!/^https:\/\//i.test(pl))throw new Error("Le lien de paiement doit commencer par https://");
    const free=fd.has("free"),id=ED?.id||doc(collection(db,"sujets")).id,c={...(ED?.c||{})};
    if(ED&&!!ED.c.free!==free){await mediaOp(c.imageId,free);await mediaOp(c.pdfId,free)}
-   const im=fd.get("image"),pd=fd.get("pdf");
+   const im=fd.get("image"),pd=fd.get("pdf"),pv=fd.get("preview");
    if(im.size){await mediaOp(c.imageId);c.imageId=await upload(im,free,1100,id)}
    if(pd.size){await mediaOp(c.pdfId);c.pdfId=await upload(pd,free,0,id)}
+   if(pv.size){await mediaOp(c.previewId);c.previewId=await upload(pv,true,1100,id)}
    c.free=free;c.corrige=fd.get("corrige");c.video=fd.get("video").trim();
-   const m={title:fd.get("title").trim(),exam:fd.get("exam"),mat:fd.get("mat").trim(),an:+fd.get("an")||0,free,price:+fd.get("price")||0,payLink:pl,hasPdf:!!c.pdfId,hasVideo:!!c.video};
+   const m={fiche:fd.has("fiche"),duration:+fd.get("duration")||0,audience:fd.get("audience"),hidden:fd.has("hidden"),title:fd.get("title").trim(),exam:fd.get("exam"),mat:fd.get("mat").trim(),an:+fd.get("an")||0,free,price:+fd.get("price")||0,payLink:pl,hasPdf:!!c.pdfId,hasVideo:!!c.video,previewId:c.previewId||""};
    await setDoc(doc(db,"sujetsContent",id),c);await setDoc(doc(db,"sujets",id),m);
    SUJ=[...SUJ.filter(s=>s.id!==id),{id,...m}];ED=null;render();toast("Sujet enregistré.");admSujets(box)}
   catch(er){toast(em(er));btn.disabled=false;btn.textContent="Enregistrer"}}}
@@ -375,7 +426,8 @@ function admQuiz(box){
 async function admPay(box){box.innerHTML="Chargement…";
  try{const L=(await getDocs(collection(db,"payments"))).docs.sort((a,b)=>(b.data().createdAt?.seconds||0)-(a.data().createdAt?.seconds||0)),pen=L.filter(d=>d.data().status==="pending"),old=L.filter(d=>d.data().status!=="pending").slice(0,20);
   const row=(d,a)=>{const x=d.data();return`<div class="row2"><div><b>${esc(x.name)}</b> · ${esc(x.email)}<div class="meta">${esc(x.label)} · ${fcfa(x.amount)} · Réf. ${esc(x.ref)}</div></div>${a?`<div><button class="btn sm" data-ok="${d.id}">Valider</button> <button class="btn sm red" data-no="${d.id}">Refuser</button></div>`:`<span class="st ${x.status}">${ST[x.status]}</span>`}</div>`};
-  box.innerHTML=`<p class="sub">Vérifie chaque référence dans ton compte de paiement avant de valider.</p><h3>À valider (${pen.length})</h3><div style="margin:12px 0 26px">${pen.map(d=>row(d,1)).join("")||'<div class="empty">Aucun paiement en attente.</div>'}</div><h3>Historique</h3><div style="margin-top:12px">${old.map(d=>row(d,0)).join("")||'<div class="empty">Rien pour le moment.</div>'}</div>`;
+  box.innerHTML=`<p class="sub">Vérifie chaque référence dans ton compte de paiement avant de valider.</p><p><button class="btn ghost sm" id="csv">Exporter tous les paiements (CSV)</button></p><h3>À valider (${pen.length})</h3><div style="margin:12px 0 26px">${pen.map(d=>row(d,1)).join("")||'<div class="empty">Aucun paiement en attente.</div>'}</div><h3>Historique</h3><div style="margin-top:12px">${old.map(d=>row(d,0)).join("")||'<div class="empty">Rien pour le moment.</div>'}</div>`;
+  $("#csv").onclick=()=>{const q=v=>'"'+String(v??"").replace(/"/g,'""')+'"',r=[["Date","Nom","E-mail","Article","Montant","Référence","Statut"],...L.map(d=>{const x=d.data();return[x.createdAt?.seconds?new Date(x.createdAt.seconds*1000).toLocaleString("fr-FR"):"",x.name,x.email,x.label,x.amount,x.ref,ST[x.status]]})],a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\ufeff"+r.map(l=>l.map(q).join(";")).join("\n")],{type:"text/csv"}));a.download="paiements-examia.csv";a.click()};
   box.querySelectorAll("[data-ok]").forEach(b=>b.onclick=async()=>{const d=L.find(z=>z.id===b.dataset.ok),x=d.data();try{
    if(x.kind==="sujet")await setDoc(doc(db,"access",x.uid+"_"+x.itemId),{uid:x.uid,sid:x.itemId});
    else{const u=await getDoc(doc(db,"users",x.uid)),cur=Math.max(Date.now(),u.data()?.premiumUntil||0);await setDoc(u.ref,{premiumUntil:cur+x.days*864e5},{merge:true})}
@@ -392,6 +444,9 @@ async function admMem(box){box.innerHTML="Chargement…";
  }catch(er){box.textContent=em(er)}}
 
 $("#dlg").addEventListener("click",e=>{if(e.target===e.currentTarget)e.currentTarget.close()});
+let DI;addEventListener("beforeinstallprompt",e=>{e.preventDefault();DI=e;$("#inst").hidden=false});
+$("#inst").onclick=async()=>{DI.prompt();await DI.userChoice;$("#inst").hidden=true};
+if("serviceWorker" in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("sw.js").catch(()=>{});
 render();loadAll();
 </script>
 </body>
